@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">VkNewsClient</string>
+    <string name="template_text">Lorem Ipsum - это текст-\"рыба\", часто используемый в печати и вэб-дизайне.</string>
+    <string name="navigation_item_main">Главная</string>
+    <string name="navigation_item_favourite">Избранное</string>
+    <string name="navigation_item_profile">Профиль</string>
+</resources>
