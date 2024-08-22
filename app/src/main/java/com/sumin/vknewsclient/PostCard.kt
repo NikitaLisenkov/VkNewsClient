@@ -25,14 +25,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.sumin.vknewsclient.domain.FeedPost
+import com.sumin.vknewsclient.domain.FeedPostModel
 import com.sumin.vknewsclient.domain.StatisticItem
 import com.sumin.vknewsclient.domain.StatisticItem.StatisticType
 
 @Composable
 fun PostCard(
     modifier: Modifier = Modifier,
-    feedPost: FeedPost,
+    feedPostModel: FeedPostModel,
     onLikeClick: (StatisticItem) -> Unit,
     onShareClick: (StatisticItem) -> Unit,
     onCommentClick: (StatisticItem) -> Unit,
@@ -42,21 +42,21 @@ fun PostCard(
         Column(
             modifier = Modifier.padding(8.dp)
         ) {
-            PostHeader(feedPost)
+            PostHeader(feedPostModel)
             Spacer(modifier = Modifier.height(8.dp))
-            Text(text = feedPost.contentText)
+            Text(text = feedPostModel.contentText)
             Spacer(modifier = Modifier.height(8.dp))
             Image(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(300.dp),
-                painter = painterResource(id = feedPost.contentImageResId),
+                painter = painterResource(id = feedPostModel.contentImageResId),
                 contentDescription = null,
                 contentScale = ContentScale.FillWidth
             )
             Spacer(modifier = Modifier.height(8.dp))
             Statistics(
-                statistics = feedPost.statistics,
+                statistics = feedPostModel.statistics,
                 onLikeClick = onLikeClick,
                 onViewClick = onViewClick,
                 onCommentClick = onCommentClick,
@@ -69,7 +69,7 @@ fun PostCard(
 
 @Composable
 private fun PostHeader(
-    feedPost: FeedPost,
+    feedPostModel: FeedPostModel,
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -79,18 +79,18 @@ private fun PostHeader(
             modifier = Modifier
                 .clip(CircleShape)
                 .size(50.dp),
-            painter = painterResource(id = feedPost.avatarResId),
+            painter = painterResource(id = feedPostModel.avatarResId),
             contentDescription = null
         )
         Spacer(modifier = Modifier.width(8.dp))
         Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = feedPost.communityName,
+                text = feedPostModel.communityName,
                 color = MaterialTheme.colors.onPrimary
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = feedPost.publicationDate,
+                text = feedPostModel.publicationDate,
                 color = MaterialTheme.colors.onSecondary
             )
         }
