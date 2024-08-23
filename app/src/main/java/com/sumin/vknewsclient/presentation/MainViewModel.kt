@@ -1,8 +1,8 @@
-package com.sumin.vknewsclient
+package com.sumin.vknewsclient.presentation
 
 import androidx.lifecycle.ViewModel
-import com.sumin.vknewsclient.domain.FeedPostModel
-import com.sumin.vknewsclient.domain.StatisticItem
+import com.sumin.vknewsclient.domain.model.FeedPostModel
+import com.sumin.vknewsclient.domain.model.StatisticItem
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,6 +18,7 @@ class MainViewModel : ViewModel() {
     private val _feedPosts: MutableStateFlow<List<FeedPostModel>> =
         MutableStateFlow(newsList)
     val feedPosts: StateFlow<List<FeedPostModel>> = _feedPosts.asStateFlow()
+
 
     fun updateCount(feedPostModel: FeedPostModel, item: StatisticItem) {
         val oldPost = _feedPosts.value.toMutableList()

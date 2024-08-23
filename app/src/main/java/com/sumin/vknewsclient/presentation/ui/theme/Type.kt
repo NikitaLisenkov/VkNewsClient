@@ -1,4 +1,4 @@
-package com.sumin.vknewsclient.ui.theme
+package com.sumin.vknewsclient.presentation.ui.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle
