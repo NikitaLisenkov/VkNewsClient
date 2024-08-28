@@ -75,9 +75,12 @@ fun MainScreen() {
                         }
                     )
                 } else {
-                    ScreenComments {
-                        commentToPost.value = null
-                    }
+                    ScreenComments(
+                        onBackPressed = { commentToPost.value = null },
+                        feedPost = commentToPost.value!!
+                    )
+
+
                 }
             },
             favouriteScreenContent = {

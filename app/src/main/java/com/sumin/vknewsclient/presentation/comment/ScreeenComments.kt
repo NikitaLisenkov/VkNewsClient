@@ -31,13 +31,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sumin.vknewsclient.domain.model.comment.PostComment
+import com.sumin.vknewsclient.domain.model.post.FeedPostModel
 import com.sumin.vknewsclient.presentation.ui.theme.VkNewsClientTheme
 
 @Composable
 fun ScreenComments(
-    onBackPressed: () -> Unit
+    onBackPressed: () -> Unit,
+    feedPost: FeedPostModel
 ) {
-    val viewModel: CommentsViewModel = viewModel()
+    val viewModel: CommentsViewModel = viewModel(factory = CommentsViewModelFactory(feedPost))
 
     val state = viewModel.screenState.collectAsState(CommentsScreenState.Initial)
 

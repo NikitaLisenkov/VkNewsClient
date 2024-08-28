@@ -7,17 +7,17 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-class CommentsViewModel : ViewModel() {
+class CommentsViewModel(feedPost: FeedPostModel) : ViewModel() {
 
     private val _screenState: MutableStateFlow<CommentsScreenState> =
         MutableStateFlow(CommentsScreenState.Initial)
     val screenState: StateFlow<CommentsScreenState> = _screenState.asStateFlow()
 
     init {
-        loadComments(FeedPostModel())
+        loadComments(feedPost)
     }
 
-    fun loadComments(feedPost: FeedPostModel) {
+    private fun loadComments(feedPost: FeedPostModel) {
         val comments = List(20) {
             PostComment(id = it)
         }
