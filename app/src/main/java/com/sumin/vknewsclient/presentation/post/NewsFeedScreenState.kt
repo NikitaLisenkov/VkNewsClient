@@ -1,6 +1,6 @@
-package com.sumin.vknewsclient.presentation
+package com.sumin.vknewsclient.presentation.post
 
-import com.sumin.vknewsclient.domain.model.FeedPostModel
+import com.sumin.vknewsclient.domain.model.post.FeedPostModel
 
 sealed class NewsFeedScreenState {
     data object Initial : NewsFeedScreenState()

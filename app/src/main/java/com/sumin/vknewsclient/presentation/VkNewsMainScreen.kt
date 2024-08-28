@@ -7,30 +7,31 @@ import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Favorite
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Person
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.sumin.vknewsclient.R
-import com.sumin.vknewsclient.presentation.navigation.AppNavGraph
-import com.sumin.vknewsclient.presentation.navigation.Screen
-import com.sumin.vknewsclient.presentation.navigation.rememberNavState
+import com.sumin.vknewsclient.domain.model.post.FeedPostModel
+import com.sumin.vknewsclient.navigation.AppNavGraph
+import com.sumin.vknewsclient.navigation.rememberNavState
+import com.sumin.vknewsclient.presentation.comment.ScreenComments
+import com.sumin.vknewsclient.presentation.post.ScreenHome
 
 
 @Composable
-fun MainScreen(viewModel: NewsFeedViewModel) {
+fun MainScreen() {
     val navState = rememberNavState()
 
+    val commentToPost: MutableState<FeedPostModel?> = remember {
+        mutableStateOf(null)
+    }
 
     Scaffold(
         bottomBar = {
@@ -66,10 +67,18 @@ fun MainScreen(viewModel: NewsFeedViewModel) {
         AppNavGraph(
             navHostController = navState.navHostController,
             homeScreenContent = {
-                ScreenHome(
-                    viewModel = viewModel,
-                    paddingValues = paddingValues
-                )
+                if (commentToPost.value == null) {
+                    ScreenHome(
+                        paddingValues = paddingValues,
+                        onCommentClick = {
+                            commentToPost.value = it
+                        }
+                    )
+                } else {
+                    ScreenComments {
+                        commentToPost.value = null
+                    }
+                }
             },
             favouriteScreenContent = {
                 TextCounter(name = "Favourite")
@@ -80,30 +89,6 @@ fun MainScreen(viewModel: NewsFeedViewModel) {
     }
 }
 
-
-sealed class NavigationItem(
-    val screen: Screen,
-    val titleResId: Int,
-    val icon: ImageVector
-) {
-    data object Home : NavigationItem(
-        screen = Screen.NewsFeed,
-        titleResId = R.string.navigation_item_main,
-        icon = Icons.Outlined.Home
-    )
-
-    data object Favourite : NavigationItem(
-        screen = Screen.Favourite,
-        titleResId = R.string.navigation_item_favourite,
-        icon = Icons.Outlined.Favorite
-    )
-
-    data object Profile : NavigationItem(
-        screen = Screen.Profile,
-        titleResId = R.string.navigation_item_profile,
-        icon = Icons.Outlined.Person
-    )
-}
 
 @Composable
 private fun TextCounter(name: String) {

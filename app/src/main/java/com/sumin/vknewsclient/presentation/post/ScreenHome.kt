@@ -1,6 +1,5 @@
-package com.sumin.vknewsclient.presentation
+package com.sumin.vknewsclient.presentation.post
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -23,35 +22,28 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.sumin.vknewsclient.domain.model.FeedPostModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.sumin.vknewsclient.domain.model.post.FeedPostModel
 
 
 @Composable
-fun ScreenHome(viewModel: NewsFeedViewModel, paddingValues: PaddingValues) {
+fun ScreenHome(
+    paddingValues: PaddingValues,
+    onCommentClick: (FeedPostModel) -> Unit
+) {
+    val viewModel: NewsFeedViewModel = viewModel()
 
     val screenState = viewModel.screenState.collectAsState(NewsFeedScreenState.Initial)
 
     val currentState = screenState.value
 
     when (currentState) {
-        is NewsFeedScreenState.Comments -> {
-            ScreenComments(
-                feedPostModel = currentState.feedPost,
-                comments = currentState.comments,
-                onBackPressed = {
-                    viewModel.closeComments()
-                }
-            )
-            BackHandler {
-                viewModel.closeComments()
-            }
-        }
-
         is NewsFeedScreenState.Posts -> {
             FeedPosts(
                 posts = currentState.posts,
                 viewModel = viewModel,
-                paddingValues = paddingValues
+                paddingValues = paddingValues,
+                onCommentClick = onCommentClick
             )
         }
 
@@ -65,7 +57,8 @@ fun ScreenHome(viewModel: NewsFeedViewModel, paddingValues: PaddingValues) {
 private fun FeedPosts(
     posts: List<FeedPostModel>,
     viewModel: NewsFeedViewModel,
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
+    onCommentClick: (FeedPostModel) -> Unit
 ) {
     LazyColumn(
         modifier = Modifier.padding(paddingValues),
@@ -77,11 +70,11 @@ private fun FeedPosts(
         ),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(posts, key = { it.id }) { postModel ->
+        items(posts, key = { it.id }) { feedPost ->
 
             val dismissState = rememberDismissState()
             if (dismissState.isDismissed(DismissDirection.EndToStart)) {
-                viewModel.deletePost(postModel)
+                viewModel.deletePost(feedPost)
             }
             SwipeToDismiss(
                 modifier = Modifier.animateItemPlacement(),
@@ -108,19 +101,19 @@ private fun FeedPosts(
                 },
                 dismissContent = {
                     PostCard(
-                        feedPostModel = postModel,
+                        feedPostModel = feedPost,
                         onLikeClick = { statisticItem ->
 
-                            viewModel.updateCount(postModel, statisticItem)
+                            viewModel.updateCount(feedPost, statisticItem)
                         },
                         onCommentClick = {
-                            viewModel.showComments(postModel)
+                            onCommentClick(feedPost)
                         },
                         onShareClick = { statisticItem ->
-                            viewModel.updateCount(postModel, statisticItem)
+                            viewModel.updateCount(feedPost, statisticItem)
                         },
                         onViewClick = { statisticItem ->
-                            viewModel.updateCount(postModel, statisticItem)
+                            viewModel.updateCount(feedPost, statisticItem)
                         }
                     )
                 }

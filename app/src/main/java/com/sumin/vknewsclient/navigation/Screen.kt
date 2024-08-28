@@ -1,4 +1,4 @@
-package com.sumin.vknewsclient.presentation.navigation
+package com.sumin.vknewsclient.navigation
 
 sealed class Screen(val route: String) {
     data object NewsFeed : Screen(ROUTE_NEWS_FEED)

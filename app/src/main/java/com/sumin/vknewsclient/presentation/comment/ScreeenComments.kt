@@ -1,4 +1,4 @@
-package com.sumin.vknewsclient.presentation
+package com.sumin.vknewsclient.presentation.comment
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -22,48 +22,58 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.sumin.vknewsclient.domain.model.FeedPostModel
-import com.sumin.vknewsclient.domain.model.PostComment
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.sumin.vknewsclient.domain.model.comment.PostComment
 import com.sumin.vknewsclient.presentation.ui.theme.VkNewsClientTheme
 
 @Composable
 fun ScreenComments(
-    feedPostModel: FeedPostModel,
-    comments: List<PostComment>,
     onBackPressed: () -> Unit
 ) {
-    Scaffold(topBar = {
-        TopAppBar(
-            title = {
-                Text(text = "Comments for FeedPost id: ${feedPostModel.id}")
-            },
-            navigationIcon = {
-                IconButton(onClick = { onBackPressed() }) {
-                    Icon(
-                        Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = null
-                    )
+    val viewModel: CommentsViewModel = viewModel()
 
+    val state = viewModel.screenState.collectAsState(CommentsScreenState.Initial)
+
+    val currentState = state.value
+
+    if (currentState is CommentsScreenState.Comments) {
+        Scaffold(topBar = {
+            TopAppBar(
+                title = {
+                    Text(text = "Comments for FeedPost id: ${currentState.post.id}")
+                },
+                navigationIcon = {
+                    IconButton(onClick = { onBackPressed() }) {
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = null
+                        )
+
+                    }
+                })
+        }) { paddingValues ->
+            LazyColumn(
+                modifier = Modifier.padding(paddingValues),
+                contentPadding = PaddingValues(
+                    top = 16.dp,
+                    start = 8.dp,
+                    end = 8.dp,
+                    bottom = 72.dp
+                )
+            ) {
+                items(
+                    items = currentState.comments,
+                    key = { it.id }
+                ) { comment ->
+                    CommentItem(comment = comment)
                 }
-            })
-    }) { paddingValues ->
-        LazyColumn(
-            modifier = Modifier.padding(paddingValues),
-            contentPadding = PaddingValues(
-                top = 16.dp,
-                start = 8.dp,
-                end = 8.dp,
-                bottom = 72.dp
-            )
-        ) {
-            items(items = comments, key = { it.id }) { comment ->
-                CommentItem(comment = comment)
             }
         }
     }

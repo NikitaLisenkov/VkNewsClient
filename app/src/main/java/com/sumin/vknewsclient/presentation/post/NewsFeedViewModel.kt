@@ -1,8 +1,8 @@
-package com.sumin.vknewsclient.presentation
+package com.sumin.vknewsclient.presentation.post
 
 import androidx.lifecycle.ViewModel
-import com.sumin.vknewsclient.domain.model.FeedPostModel
-import com.sumin.vknewsclient.domain.model.StatisticItem
+import com.sumin.vknewsclient.domain.model.post.FeedPostModel
+import com.sumin.vknewsclient.domain.model.post.StatisticItem
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
