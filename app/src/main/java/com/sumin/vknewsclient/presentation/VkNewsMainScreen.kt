@@ -28,7 +28,7 @@ import com.sumin.vknewsclient.presentation.navigation.rememberNavState
 
 
 @Composable
-fun MainScreen(viewModel: MainViewModel) {
+fun MainScreen(viewModel: NewsFeedViewModel) {
     val navState = rememberNavState()
 
 
