@@ -8,10 +8,8 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -19,7 +17,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.sumin.vknewsclient.domain.model.post.FeedPostModel
 import com.sumin.vknewsclient.navigation.AppNavGraph
 import com.sumin.vknewsclient.navigation.rememberNavState
 import com.sumin.vknewsclient.presentation.comment.ScreenComments
@@ -29,10 +26,6 @@ import com.sumin.vknewsclient.presentation.post.ScreenHome
 @Composable
 fun MainScreen() {
     val navState = rememberNavState()
-
-    val commentToPost: MutableState<FeedPostModel?> = remember {
-        mutableStateOf(null)
-    }
 
     Scaffold(
         bottomBar = {
@@ -78,17 +71,16 @@ fun MainScreen() {
             newsFeedScreenContent = {
                 ScreenHome(
                     paddingValues = paddingValues,
-                    onCommentClick = {
-                        commentToPost.value = it
-                        navState.navigateToComments()
+                    onCommentClick = { feedPost ->
+                        navState.navigateToComments(feedPost)
                     }
                 )
 
             },
-            commentsScreenContent = {
+            commentsScreenContent = { feedPost ->
                 ScreenComments(
                     onBackPressed = { navState.navHostController.popBackStack() },
-                    feedPost = commentToPost.value!!
+                    feedPost = feedPost
                 )
             },
             favouriteScreenContent = {
