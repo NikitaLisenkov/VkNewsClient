@@ -1,8 +1,8 @@
 package com.sumin.vknewsclient.navigation
 
+import android.os.Build
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
@@ -18,20 +18,22 @@ fun NavGraphBuilder.homeScreenNavGraph(
         }
         composable(
             route = Screen.Comments.route,
-            arguments = listOf(navArgument(Screen.KEY_FEED_POST_ID) {
-                type = NavType.IntType
-            }, navArgument(Screen.KEY_CONTENT_TEXT) {
-                type = NavType.StringType
+            arguments = listOf(navArgument(Screen.KEY_FEED_POST) {
+                type = FeedPostModel.navigationType
             })
-        ) { entry ->  //comments/{feed_post_id}
-            val feedPostId = entry.arguments?.getInt(Screen.KEY_FEED_POST_ID) ?: 0
-            val feedPostContentText = entry.arguments?.getString(Screen.KEY_CONTENT_TEXT) ?: ""
-            commentsScreenContent(
-                FeedPostModel(
-                    id = feedPostId,
-                    contentText = feedPostContentText
-                )
-            )
+        ) {
+            val args = it.arguments
+            val feedPost = kotlin.runCatching {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+                    args?.getParcelable(Screen.KEY_FEED_POST)
+                } else {
+                    args?.getParcelable(
+                        Screen.KEY_FEED_POST,
+                        FeedPostModel::class.java
+                    )
+                }
+            }.getOrNull() ?: throw ClassCastException("Args is null")
+            commentsScreenContent(feedPost)
         }
     }
 }

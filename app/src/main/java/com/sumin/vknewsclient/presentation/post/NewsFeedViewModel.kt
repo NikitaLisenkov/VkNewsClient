@@ -12,7 +12,7 @@ class NewsFeedViewModel : ViewModel() {
     private val sourceList = List(10) {
         FeedPostModel(
             id = it,
-            contentText = "Content: $it"
+            contentText = "Co/ntent: $it"
         )
     }
 
