@@ -17,14 +17,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.sumin.vknewsclient.di.AppComponent
 import com.sumin.vknewsclient.navigation.AppNavGraph
 import com.sumin.vknewsclient.navigation.rememberNavState
 import com.sumin.vknewsclient.presentation.comment.ScreenComments
 import com.sumin.vknewsclient.presentation.post.ScreenHome
 
-
 @Composable
-fun MainScreen() {
+fun MainScreen(
+    component: AppComponent
+) {
     val navState = rememberNavState()
 
     Scaffold(
@@ -71,16 +73,17 @@ fun MainScreen() {
             newsFeedScreenContent = {
                 ScreenHome(
                     paddingValues = paddingValues,
-                    onCommentClick = { feedPost ->
-                        navState.navigateToComments(feedPost)
+                    component = component,
+                    onCommentClick = { feedId ->
+                        navState.navigateToComments(feedId)
                     }
                 )
-
             },
-            commentsScreenContent = { feedPost ->
+            commentsScreenContent = { feedId ->
                 ScreenComments(
-                    onBackPressed = { navState.navHostController.popBackStack() },
-                    feedPost = feedPost
+                    component = component,
+                    feedId = feedId,
+                    onBackPressed = { navState.navHostController.popBackStack() }
                 )
             },
             favouriteScreenContent = {

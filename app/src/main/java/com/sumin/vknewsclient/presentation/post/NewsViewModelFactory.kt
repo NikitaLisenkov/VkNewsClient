@@ -1,18 +1,14 @@
-package com.sumin.vknewsclient.presentation.comment
+package com.sumin.vknewsclient.presentation.post
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.sumin.vknewsclient.domain.post.FeedRepository
 
 @Suppress("UNCHECKED_CAST")
-class CommentsViewModelFactory(
-    private val feedId: Int,
-    private val repository: FeedRepository
+class NewsViewModelFactory(
+    private val feedRepository: FeedRepository
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return CommentsViewModel(
-            feedId = feedId,
-            repository = repository
-        ) as T
+        return NewsFeedViewModel(repository = feedRepository) as T
     }
 }

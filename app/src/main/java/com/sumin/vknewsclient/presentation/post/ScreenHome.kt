@@ -17,33 +17,36 @@ import androidx.compose.material.Text
 import androidx.compose.material.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.sumin.vknewsclient.domain.model.post.FeedPostModel
-
+import com.sumin.vknewsclient.di.AppComponent
+import com.sumin.vknewsclient.domain.post.FeedPostModel
 
 @Composable
 fun ScreenHome(
     paddingValues: PaddingValues,
-    onCommentClick: (FeedPostModel) -> Unit
+    component: AppComponent,
+    onCommentClick: (feedId: Int) -> Unit
 ) {
-    val viewModel: NewsFeedViewModel = viewModel()
+    val viewModel: NewsFeedViewModel = viewModel(factory = NewsViewModelFactory(component.feedRepository))
 
-    val screenState = viewModel.screenState.collectAsState(NewsFeedScreenState.Initial)
+    val screenState by viewModel.screenState.collectAsState(NewsFeedScreenState.Initial)
 
-    val currentState = screenState.value
-
-    when (currentState) {
+    when (val state = screenState) {
         is NewsFeedScreenState.Posts -> {
             FeedPosts(
-                posts = currentState.posts,
+                posts = state.posts,
                 viewModel = viewModel,
                 paddingValues = paddingValues,
-                onCommentClick = onCommentClick
+                onCommentClick = {
+                    viewModel.saveFeed(it)
+                    onCommentClick.invoke(it.id)
+                }
             )
         }
 

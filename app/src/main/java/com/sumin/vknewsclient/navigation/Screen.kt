@@ -1,8 +1,6 @@
 package com.sumin.vknewsclient.navigation
 
-import android.net.Uri
-import com.google.gson.Gson
-import com.sumin.vknewsclient.domain.model.post.FeedPostModel
+import android.os.Bundle
 
 sealed class Screen(val route: String) {
 
@@ -10,26 +8,25 @@ sealed class Screen(val route: String) {
     data object Profile : Screen(ROUTE_PROFILE)
     data object Home : Screen(ROUTE_HOME)
     data object NewsFeed : Screen(ROUTE_NEWS_FEED)
+
     data object Comments : Screen(ROUTE_COMMENTS) {
-        private const val ROUTE_FOR_ARGS = "comments"
-        fun getRouteWithArgs(feedPost: FeedPostModel): String {
-            val feedPostJson = Gson().toJson(feedPost)
-            return "$ROUTE_FOR_ARGS/${feedPostJson.encode()}"
+        fun getRouteWithArgs(feedId: Int): String {
+            return "$COMMENTS/$feedId"
+        }
+
+        fun getArgs(bundle: Bundle?): Int {
+            requireNotNull(bundle)
+            return bundle.getInt(KEY_FEED_ID)
         }
     }
 
-
-    fun String.encode(): String {
-        return Uri.encode(this)
-    }
-
-
     companion object {
-        const val KEY_FEED_POST = "feed_post"
+        const val KEY_FEED_ID = "feed_post"
+        const val COMMENTS = "comments"
 
         const val ROUTE_HOME = "home"
         const val ROUTE_NEWS_FEED = "news_feed"
-        const val ROUTE_COMMENTS = "comments/{$KEY_FEED_POST}"
+        const val ROUTE_COMMENTS = "$COMMENTS/{$KEY_FEED_ID}"
         const val ROUTE_FAVOURITE = "favourite"
         const val ROUTE_PROFILE = "profile"
     }

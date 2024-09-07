@@ -1,13 +1,16 @@
 package com.sumin.vknewsclient.presentation.post
 
 import androidx.lifecycle.ViewModel
-import com.sumin.vknewsclient.domain.model.post.FeedPostModel
-import com.sumin.vknewsclient.domain.model.post.StatisticItem
+import com.sumin.vknewsclient.domain.post.FeedPostModel
+import com.sumin.vknewsclient.domain.post.FeedRepository
+import com.sumin.vknewsclient.domain.post.StatisticItem
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-class NewsFeedViewModel : ViewModel() {
+class NewsFeedViewModel(
+    private val repository: FeedRepository
+) : ViewModel() {
 
     private val sourceList = List(10) {
         FeedPostModel(
@@ -58,5 +61,9 @@ class NewsFeedViewModel : ViewModel() {
         val modifiedList = currentState.posts.toMutableList()
         modifiedList.remove(post)
         _screenState.value = NewsFeedScreenState.Posts(posts = modifiedList)
+    }
+
+    fun saveFeed(model: FeedPostModel) {
+        repository.cachedFeed = model
     }
 }

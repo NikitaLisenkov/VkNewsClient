@@ -1,23 +1,28 @@
 package com.sumin.vknewsclient.presentation.comment
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.sumin.vknewsclient.domain.model.comment.PostComment
-import com.sumin.vknewsclient.domain.model.post.FeedPostModel
+import com.sumin.vknewsclient.domain.comment.PostComment
+import com.sumin.vknewsclient.domain.post.FeedRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-class CommentsViewModel(feedPost: FeedPostModel) : ViewModel() {
+class CommentsViewModel(
+    feedId: Int,
+    private val repository: FeedRepository
+) : ViewModel() {
 
-    private val _screenState: MutableStateFlow<CommentsScreenState> =
-        MutableStateFlow(CommentsScreenState.Initial)
+    private val _screenState: MutableStateFlow<CommentsScreenState> = MutableStateFlow(CommentsScreenState.Initial)
     val screenState: StateFlow<CommentsScreenState> = _screenState.asStateFlow()
 
     init {
-        loadComments(feedPost)
+        loadComments(feedId)
     }
 
-    private fun loadComments(feedPost: FeedPostModel) {
+    private fun loadComments(feedId: Int) {
+        Log.d("qwe", "Opened $feedId")
+        val feedPost = repository.cachedFeed ?: return
         val comments = List(20) {
             PostComment(id = it)
         }
