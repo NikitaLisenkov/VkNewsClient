@@ -19,8 +19,8 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.sumin.vknewsclient.navigation.AppNavGraph
 import com.sumin.vknewsclient.navigation.rememberNavState
-import com.sumin.vknewsclient.presentation.comment.ScreenComments
-import com.sumin.vknewsclient.presentation.post.ScreenHome
+import com.sumin.vknewsclient.presentation.comments.CommentsScreen
+import com.sumin.vknewsclient.presentation.news.NewsFeedScreen
 
 
 @Composable
@@ -69,7 +69,7 @@ fun MainScreen() {
         AppNavGraph(
             navHostController = navState.navHostController,
             newsFeedScreenContent = {
-                ScreenHome(
+                NewsFeedScreen(
                     paddingValues = paddingValues,
                     onCommentClick = { feedPost ->
                         navState.navigateToComments(feedPost)
@@ -78,7 +78,7 @@ fun MainScreen() {
 
             },
             commentsScreenContent = { feedPost ->
-                ScreenComments(
+                CommentsScreen(
                     onBackPressed = { navState.navHostController.popBackStack() },
                     feedPost = feedPost
                 )

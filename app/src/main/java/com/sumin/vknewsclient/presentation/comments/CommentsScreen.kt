@@ -1,4 +1,4 @@
-package com.sumin.vknewsclient.presentation.comment
+package com.sumin.vknewsclient.presentation.comments
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -35,7 +35,7 @@ import com.sumin.vknewsclient.domain.model.post.FeedPostModel
 import com.sumin.vknewsclient.presentation.ui.theme.VkNewsClientTheme
 
 @Composable
-fun ScreenComments(
+fun CommentsScreen(
     onBackPressed: () -> Unit,
     feedPost: FeedPostModel
 ) {

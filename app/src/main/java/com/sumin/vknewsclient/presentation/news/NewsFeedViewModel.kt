@@ -1,4 +1,4 @@
-package com.sumin.vknewsclient.presentation.post
+package com.sumin.vknewsclient.presentation.news
 
 import androidx.lifecycle.ViewModel
 import com.sumin.vknewsclient.domain.model.post.FeedPostModel

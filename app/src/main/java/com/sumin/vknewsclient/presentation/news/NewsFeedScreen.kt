@@ -1,4 +1,4 @@
-package com.sumin.vknewsclient.presentation.post
+package com.sumin.vknewsclient.presentation.news
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -27,7 +27,7 @@ import com.sumin.vknewsclient.domain.model.post.FeedPostModel
 
 
 @Composable
-fun ScreenHome(
+fun NewsFeedScreen(
     paddingValues: PaddingValues,
     onCommentClick: (FeedPostModel) -> Unit
 ) {
