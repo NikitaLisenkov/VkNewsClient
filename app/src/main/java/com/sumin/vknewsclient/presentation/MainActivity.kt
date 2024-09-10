@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
 
                     is LoginState.NotAuthorized -> {
                         LoginScreen {
-                            launcher.launch(listOf(VKScope.WALL))
+                            launcher.launch(listOf(VKScope.WALL, VKScope.FRIENDS))
                         }
                     }
 

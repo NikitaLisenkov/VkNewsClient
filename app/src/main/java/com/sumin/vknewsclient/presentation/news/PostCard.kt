@@ -1,6 +1,5 @@
 package com.sumin.vknewsclient.presentation.news
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
@@ -25,6 +25,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.sumin.vknewsclient.R
 import com.sumin.vknewsclient.domain.model.post.FeedPostModel
 import com.sumin.vknewsclient.domain.model.post.StatisticItem
@@ -47,11 +48,11 @@ fun PostCard(
             Spacer(modifier = Modifier.height(8.dp))
             Text(text = feedPostModel.contentText)
             Spacer(modifier = Modifier.height(8.dp))
-            Image(
+            AsyncImage(
+                model = feedPostModel.contentImageUrl,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(300.dp),
-                painter = painterResource(id = feedPostModel.contentImageResId),
+                    .wrapContentHeight(),
                 contentDescription = null,
                 contentScale = ContentScale.FillWidth
             )
@@ -76,11 +77,11 @@ private fun PostHeader(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Image(
+        AsyncImage(
+            model = feedPostModel.communityImageUrl,
             modifier = Modifier
-                .clip(CircleShape)
-                .size(50.dp),
-            painter = painterResource(id = feedPostModel.avatarResId),
+                .size(50.dp)
+                .clip(CircleShape),
             contentDescription = null
         )
         Spacer(modifier = Modifier.width(8.dp))
