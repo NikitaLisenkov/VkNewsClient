@@ -1,5 +1,6 @@
 package com.sumin.vknewsclient.presentation.news
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,14 +23,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.sumin.vknewsclient.R
-import com.sumin.vknewsclient.domain.model.post.FeedPostModel
-import com.sumin.vknewsclient.domain.model.post.StatisticItem
-import com.sumin.vknewsclient.domain.model.post.StatisticItem.StatisticType
+import com.sumin.vknewsclient.domain.post.FeedPostModel
+import com.sumin.vknewsclient.domain.post.StatisticItem
+import com.sumin.vknewsclient.domain.post.StatisticItem.StatisticType
+import com.sumin.vknewsclient.presentation.ui.theme.DarkRed
 
 @Composable
 fun PostCard(
@@ -62,7 +65,8 @@ fun PostCard(
                 onLikeClick = onLikeClick,
                 onViewClick = onViewClick,
                 onCommentClick = onCommentClick,
-                onShareClick = onShareClick
+                onShareClick = onShareClick,
+                isFavourite = feedPostModel.isLiked
             )
         }
 
@@ -110,14 +114,15 @@ private fun Statistics(
     onLikeClick: (StatisticItem) -> Unit,
     onShareClick: (StatisticItem) -> Unit,
     onCommentClick: (StatisticItem) -> Unit,
-    onViewClick: (StatisticItem) -> Unit
+    onViewClick: (StatisticItem) -> Unit,
+    isFavourite: Boolean
 ) {
     Row {
         Row(modifier = Modifier.weight(1f)) {
             val viewsItem = statistics.getItemByType(StatisticType.VIEWS)
             IconWithText(
                 iconResId = R.drawable.ic_views_count,
-                text = viewsItem.count.toString(),
+                text = formatStatisticCount(viewsItem.count),
                 onItemClick = { onViewClick(viewsItem) }
             )
         }
@@ -128,22 +133,34 @@ private fun Statistics(
             val sharesItem = statistics.getItemByType(StatisticType.SHARES)
             IconWithText(
                 iconResId = R.drawable.ic_share,
-                text = sharesItem.count.toString(),
+                text = formatStatisticCount(sharesItem.count),
                 onItemClick = { onShareClick(sharesItem) }
             )
             val commentsItem = statistics.getItemByType(StatisticType.COMMENTS)
             IconWithText(
                 iconResId = R.drawable.ic_comment,
-                text = commentsItem.count.toString(),
+                text = formatStatisticCount(commentsItem.count),
                 onItemClick = { onCommentClick(commentsItem) }
             )
             val likesItem = statistics.getItemByType(StatisticType.LIKES)
             IconWithText(
-                iconResId = R.drawable.ic_like,
-                text = likesItem.count.toString(),
-                onItemClick = { onLikeClick(likesItem) }
+                iconResId = if (isFavourite) R.drawable.ic_like_set else R.drawable.ic_like,
+                text = formatStatisticCount(likesItem.count),
+                onItemClick = { onLikeClick(likesItem) },
+                tint = if (isFavourite) DarkRed else MaterialTheme.colors.onSecondary
             )
         }
+    }
+}
+
+@SuppressLint("DefaultLocale")
+private fun formatStatisticCount(count: Int): String {
+    return if (count > 100_000) {
+        String.format("%sK", (count / 1000))
+    } else if (count > 1000) {
+        String.format("%.1fK", (count / 1000f))
+    } else {
+        count.toString()
     }
 }
 
@@ -157,16 +174,18 @@ private fun List<StatisticItem>.getItemByType(type: StatisticType): StatisticIte
 private fun IconWithText(
     iconResId: Int,
     text: String,
-    onItemClick: () -> Unit
+    onItemClick: () -> Unit,
+    tint: Color = MaterialTheme.colors.onSecondary
 ) {
     Row(
         modifier = Modifier.clickable { onItemClick() },
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
+            modifier = Modifier.size(20.dp),
             painter = painterResource(id = iconResId),
             contentDescription = null,
-            tint = MaterialTheme.colors.onSecondary
+            tint = tint
         )
         Spacer(modifier = Modifier.width(4.dp))
         Text(

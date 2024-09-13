@@ -1,4 +1,4 @@
-package com.sumin.vknewsclient.domain.model.post
+package com.sumin.vknewsclient.domain.post
 
 import android.os.Bundle
 import android.os.Parcelable
@@ -8,13 +8,15 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class FeedPostModel(
-    val id: String,
+    val id: Long,
+    val communityId: Long,
     val communityName: String,
     val publicationDate: String,
     val communityImageUrl: String,
     val contentText: String,
     val contentImageUrl: String?,
-    val statistics: List<StatisticItem>
+    val statistics: List<StatisticItem>,
+    val isLiked: Boolean
 ) : Parcelable {
 
     companion object {

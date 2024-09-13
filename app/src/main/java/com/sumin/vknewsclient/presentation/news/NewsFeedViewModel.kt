@@ -3,13 +3,9 @@ package com.sumin.vknewsclient.presentation.news
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.sumin.vknewsclient.data.mapper.NewsFeedMapper
-import com.sumin.vknewsclient.di.ServiceLocator
-import com.sumin.vknewsclient.domain.model.post.FeedPostModel
-import com.sumin.vknewsclient.domain.model.post.StatisticItem
-import com.vk.api.sdk.VKPreferencesKeyValueStorage
-import com.vk.api.sdk.auth.VKAccessToken
-import kotlinx.coroutines.Dispatchers
+import com.sumin.vknewsclient.data.repository.NewsFeedRepositoryImpl
+import com.sumin.vknewsclient.domain.post.FeedPostModel
+import com.sumin.vknewsclient.domain.post.StatisticItem
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,19 +19,23 @@ class NewsFeedViewModel(application: Application) : AndroidViewModel(application
         MutableStateFlow(initState)
     val screenState: StateFlow<NewsFeedScreenState> = _screenState.asStateFlow()
 
-    private val mapper = NewsFeedMapper()
+    private val repo = NewsFeedRepositoryImpl(application)
 
     init {
-        loadPosts()
+        loadRecommendations()
     }
 
-    private fun loadPosts() {
+    private fun loadRecommendations() {
         viewModelScope.launch {
-            val storage = VKPreferencesKeyValueStorage(getApplication())
-            val token = VKAccessToken.restore(storage) ?: return@launch
-            val response = ServiceLocator.api.loadNewsFeed(token.accessToken)
-            val feedPosts = mapper.mapDtoToDomain(response)
+            val feedPosts = repo.loadPosts()
             _screenState.value = NewsFeedScreenState.Posts(posts = feedPosts)
+        }
+    }
+
+    fun changeLikeStatus(feedPost: FeedPostModel) {
+        viewModelScope.launch {
+            repo.changeLike(feedPost)
+            _screenState.value = NewsFeedScreenState.Posts(posts = repo.feedPosts)
         }
     }
 
