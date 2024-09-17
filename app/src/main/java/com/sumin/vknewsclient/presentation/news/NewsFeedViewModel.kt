@@ -22,8 +22,10 @@ class NewsFeedViewModel(application: Application) : AndroidViewModel(application
     private val repo = NewsFeedRepositoryImpl(application)
 
     init {
+        _screenState.value = NewsFeedScreenState.Loading
         loadRecommendations()
     }
+
 
     private fun loadRecommendations() {
         viewModelScope.launch {
@@ -31,6 +33,24 @@ class NewsFeedViewModel(application: Application) : AndroidViewModel(application
             _screenState.value = NewsFeedScreenState.Posts(posts = feedPosts)
         }
     }
+
+
+    fun loadNextRecommendations() {
+        _screenState.value = NewsFeedScreenState.Posts(
+            posts = repo.feedPosts,
+            nextDataIsLoading = true
+        )
+        loadRecommendations()
+    }
+
+
+    fun deletePost(feedPost: FeedPostModel) {
+        viewModelScope.launch {
+            repo.deleteItem(feedPost)
+            _screenState.value = NewsFeedScreenState.Posts(posts = repo.feedPosts)
+        }
+    }
+
 
     fun changeLikeStatus(feedPost: FeedPostModel) {
         viewModelScope.launch {
@@ -65,14 +85,5 @@ class NewsFeedViewModel(application: Application) : AndroidViewModel(application
             }
         }
         _screenState.value = NewsFeedScreenState.Posts(posts = newPosts)
-    }
-
-
-    fun deletePost(post: FeedPostModel) {
-        val currentState = _screenState.value
-        if (currentState !is NewsFeedScreenState.Posts) return
-        val modifiedList = currentState.posts.toMutableList()
-        modifiedList.remove(post)
-        _screenState.value = NewsFeedScreenState.Posts(posts = modifiedList)
     }
 }

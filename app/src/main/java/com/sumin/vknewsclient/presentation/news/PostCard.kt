@@ -39,9 +39,7 @@ fun PostCard(
     modifier: Modifier = Modifier,
     feedPostModel: FeedPostModel,
     onLikeClick: (StatisticItem) -> Unit,
-    onShareClick: (StatisticItem) -> Unit,
-    onCommentClick: (StatisticItem) -> Unit,
-    onViewClick: (StatisticItem) -> Unit
+    onCommentClick: (StatisticItem) -> Unit
 ) {
     Card(modifier = modifier) {
         Column(
@@ -63,9 +61,7 @@ fun PostCard(
             Statistics(
                 statistics = feedPostModel.statistics,
                 onLikeClick = onLikeClick,
-                onViewClick = onViewClick,
                 onCommentClick = onCommentClick,
-                onShareClick = onShareClick,
                 isFavourite = feedPostModel.isLiked
             )
         }
@@ -112,9 +108,7 @@ private fun PostHeader(
 private fun Statistics(
     statistics: List<StatisticItem>,
     onLikeClick: (StatisticItem) -> Unit,
-    onShareClick: (StatisticItem) -> Unit,
     onCommentClick: (StatisticItem) -> Unit,
-    onViewClick: (StatisticItem) -> Unit,
     isFavourite: Boolean
 ) {
     Row {
@@ -122,8 +116,7 @@ private fun Statistics(
             val viewsItem = statistics.getItemByType(StatisticType.VIEWS)
             IconWithText(
                 iconResId = R.drawable.ic_views_count,
-                text = formatStatisticCount(viewsItem.count),
-                onItemClick = { onViewClick(viewsItem) }
+                text = formatStatisticCount(viewsItem.count)
             )
         }
         Row(
@@ -133,8 +126,7 @@ private fun Statistics(
             val sharesItem = statistics.getItemByType(StatisticType.SHARES)
             IconWithText(
                 iconResId = R.drawable.ic_share,
-                text = formatStatisticCount(sharesItem.count),
-                onItemClick = { onShareClick(sharesItem) }
+                text = formatStatisticCount(sharesItem.count)
             )
             val commentsItem = statistics.getItemByType(StatisticType.COMMENTS)
             IconWithText(
@@ -174,11 +166,16 @@ private fun List<StatisticItem>.getItemByType(type: StatisticType): StatisticIte
 private fun IconWithText(
     iconResId: Int,
     text: String,
-    onItemClick: () -> Unit,
+    onItemClick: (() -> Unit)? = null,
     tint: Color = MaterialTheme.colors.onSecondary
 ) {
+    val modifier = if (onItemClick == null) {
+        Modifier
+    } else {
+        Modifier.clickable { onItemClick() }
+    }
     Row(
-        modifier = Modifier.clickable { onItemClick() },
+        modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(

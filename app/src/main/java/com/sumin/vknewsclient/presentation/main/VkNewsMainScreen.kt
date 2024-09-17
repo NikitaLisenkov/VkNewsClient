@@ -1,4 +1,4 @@
-package com.sumin.vknewsclient.presentation
+package com.sumin.vknewsclient.presentation.main
 
 import androidx.compose.foundation.clickable
 import androidx.compose.material.BottomNavigation

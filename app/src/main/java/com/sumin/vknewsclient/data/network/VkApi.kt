@@ -7,12 +7,25 @@ import retrofit2.http.Query
 
 interface VkApi {
 
-    @GET("newsfeed.getRecommended?v=5.199")
+    @GET("newsfeed.getRecommended?v=$VERSION")
     suspend fun loadNewsFeed(
         @Query("access_token") token: String
     ): NewsFeedResponseDto
 
-    @GET("likes.add?v=5.199&type=post")
+    @GET("newsfeed.getRecommended?v=$VERSION")
+    suspend fun loadNextNewsFeed(
+        @Query("access_token") token: String,
+        @Query("start_from") startFrom: String
+    ): NewsFeedResponseDto
+
+    @GET("newsfeed.ignoreItem?v=$VERSION&type=wall")
+    suspend fun ignoreItem(
+        @Query("access_token") token: String,
+        @Query("owner_id") ownerId: Long,
+        @Query("item_id") postId: Long
+    )
+
+    @GET("likes.add?v=$VERSION&type=post")
     suspend fun addLike(
         @Query("access_token") token: String,
         @Query("owner_id") ownerId: Long,
@@ -20,10 +33,15 @@ interface VkApi {
     ): LikesCountResponseDto
 
 
-    @GET("likes.delete?v=5.199&type=post")
+    @GET("likes.delete?v=$VERSION&type=post")
     suspend fun deleteLike(
         @Query("access_token") token: String,
         @Query("owner_id") ownerId: Long,
         @Query("item_id") postId: Long
     ): LikesCountResponseDto
+
+
+    companion object {
+        private const val VERSION = "5.199"
+    }
 }
