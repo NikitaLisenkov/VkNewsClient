@@ -1,6 +1,7 @@
 package com.sumin.vknewsclient.presentation.comments
 
-import androidx.compose.foundation.Image
+import android.app.Application
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -25,21 +26,28 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
+import com.sumin.vknewsclient.R
 import com.sumin.vknewsclient.domain.comment.PostComment
 import com.sumin.vknewsclient.domain.post.FeedPostModel
-import com.sumin.vknewsclient.presentation.ui.theme.VkNewsClientTheme
 
 @Composable
 fun CommentsScreen(
     onBackPressed: () -> Unit,
     feedPost: FeedPostModel
 ) {
-    val viewModel: CommentsViewModel = viewModel(factory = CommentsViewModelFactory(feedPost))
+    val viewModel: CommentsViewModel =
+        viewModel(
+            factory = CommentsViewModelFactory(
+                feedPost,
+                LocalContext.current.applicationContext as Application
+            )
+        )
 
     val state = viewModel.screenState.collectAsState(CommentsScreenState.Initial)
 
@@ -49,7 +57,7 @@ fun CommentsScreen(
         Scaffold(topBar = {
             TopAppBar(
                 title = {
-                    Text(text = "Comments for FeedPost id: ${currentState.post.contentText}")
+                    Text(text = stringResource(R.string.comments_title))
                 },
                 navigationIcon = {
                     IconButton(onClick = { onBackPressed() }) {
@@ -68,7 +76,8 @@ fun CommentsScreen(
                     start = 8.dp,
                     end = 8.dp,
                     bottom = 72.dp
-                )
+                ),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 items(
                     items = currentState.comments,
@@ -92,41 +101,32 @@ private fun CommentItem(comment: PostComment) {
                 vertical = 4.dp
             )
     ) {
-        Image(
+        AsyncImage(
             modifier = Modifier
-                .size(24.dp)
+                .size(48.dp)
                 .clip(CircleShape),
-            painter = painterResource(id = comment.authorAvatarId),
+            model = comment.authorAvatarUrl,
             contentDescription = null
         )
         Spacer(modifier = Modifier.width(8.dp))
         Column {
             Text(
-                text = "${comment.authorName} CommentId: ${comment.id}",
+                text = comment.authorName,
                 color = MaterialTheme.colors.onPrimary,
-                fontSize = 12.sp
+                fontSize = 16.sp
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = comment.commentText,
                 color = MaterialTheme.colors.onPrimary,
-                fontSize = 14.sp
+                fontSize = 16.sp
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = comment.publicationDate,
                 color = MaterialTheme.colors.onSecondary,
-                fontSize = 12.sp
+                fontSize = 14.sp
             )
         }
-    }
-}
-
-
-@Preview
-@Composable
-private fun PreviewComment() {
-    VkNewsClientTheme {
-        CommentItem(comment = PostComment(id = 0))
     }
 }

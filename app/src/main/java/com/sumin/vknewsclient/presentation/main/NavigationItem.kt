@@ -6,7 +6,7 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.sumin.vknewsclient.R
-import com.sumin.vknewsclient.navigation.Screen
+import com.sumin.vknewsclient.presentation.navigation.Screen
 
 sealed class NavigationItem(
     val screen: Screen,

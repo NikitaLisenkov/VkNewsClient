@@ -1,4 +1,4 @@
-package com.sumin.vknewsclient.navigation
+package com.sumin.vknewsclient.presentation.navigation
 
 import android.os.Build
 import androidx.compose.runtime.Composable

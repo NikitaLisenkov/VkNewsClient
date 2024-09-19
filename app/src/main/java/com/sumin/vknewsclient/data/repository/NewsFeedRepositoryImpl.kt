@@ -3,6 +3,7 @@ package com.sumin.vknewsclient.data.repository
 import android.app.Application
 import com.sumin.vknewsclient.data.mapper.NewsFeedMapper
 import com.sumin.vknewsclient.di.ServiceLocator
+import com.sumin.vknewsclient.domain.comment.PostComment
 import com.sumin.vknewsclient.domain.post.FeedPostModel
 import com.sumin.vknewsclient.domain.post.StatisticItem
 import com.sumin.vknewsclient.domain.repository.NewsFeedRepository
@@ -41,7 +42,7 @@ class NewsFeedRepositoryImpl(application: Application) : NewsFeedRepository {
                 startFrom
             )
         nextFrom = response.newsFeedContent.nextFrom
-        val posts = mapper.mapDtoToDomain(response)
+        val posts = mapper.mapNewsDtoToDomain(response)
         _feedPosts.addAll(posts)
         return feedPosts
     }
@@ -92,6 +93,16 @@ class NewsFeedRepositoryImpl(application: Application) : NewsFeedRepository {
         val newPost = feedPost.copy(statistics = newStatistics, isLiked = !feedPost.isLiked)
         val postIndex = _feedPosts.indexOf(feedPost)
         _feedPosts[postIndex] = newPost
+    }
+
+
+    override suspend fun getComments(feedPost: FeedPostModel): List<PostComment> {
+        val comments = api.getComments(
+            token = getAccessToken(),
+            ownerId = feedPost.communityId,
+            postId = feedPost.id
+        )
+        return mapper.mapCommentsDtoToDomain(comments)
     }
 }
 

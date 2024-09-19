@@ -17,8 +17,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.sumin.vknewsclient.navigation.AppNavGraph
-import com.sumin.vknewsclient.navigation.rememberNavState
+import com.sumin.vknewsclient.presentation.navigation.AppNavGraph
+import com.sumin.vknewsclient.presentation.navigation.rememberNavState
 import com.sumin.vknewsclient.presentation.comments.CommentsScreen
 import com.sumin.vknewsclient.presentation.news.NewsFeedScreen
 
