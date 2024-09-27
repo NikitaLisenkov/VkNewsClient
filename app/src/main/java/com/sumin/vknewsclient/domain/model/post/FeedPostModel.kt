@@ -1,4 +1,4 @@
-package com.sumin.vknewsclient.domain.post
+package com.sumin.vknewsclient.domain.model.post
 
 import android.os.Bundle
 import android.os.Parcelable

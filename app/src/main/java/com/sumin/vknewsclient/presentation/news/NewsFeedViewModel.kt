@@ -4,7 +4,11 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.sumin.vknewsclient.data.repository.NewsFeedRepositoryImpl
-import com.sumin.vknewsclient.domain.post.FeedPostModel
+import com.sumin.vknewsclient.domain.model.post.FeedPostModel
+import com.sumin.vknewsclient.domain.model.post.StatisticItem
+import com.sumin.vknewsclient.domain.usecase.ChangeLikeUseCase
+import com.sumin.vknewsclient.domain.usecase.DeletePostUseCase
+import com.sumin.vknewsclient.domain.usecase.GetRecommendationsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,6 +23,10 @@ class NewsFeedViewModel(application: Application) : AndroidViewModel(application
     val screenState: StateFlow<NewsFeedScreenState> = _screenState.asStateFlow()
 
     private val repo = NewsFeedRepositoryImpl(application)
+
+    private val getRecommendationsUseCase = GetRecommendationsUseCase(repo)
+    private val deletePostUseCase = DeletePostUseCase(repo)
+    private val changeLikeUseCase = ChangeLikeUseCase(repo)
 
     init {
         _screenState.value = NewsFeedScreenState.Loading
@@ -59,30 +67,30 @@ class NewsFeedViewModel(application: Application) : AndroidViewModel(application
     }
 
 
-//    fun updateCount(postModel: FeedPostModel, item: StatisticItem) {
-//        val currentState = _screenState.value
-//        if (currentState !is NewsFeedScreenState.Posts) return
-//        val oldPosts = currentState.posts.toMutableList()
-//        val oldStatistic = postModel.statistics
-//        val newStatistic = oldStatistic.toMutableList().apply {
-//            replaceAll { oldItem ->
-//                if (oldItem.type == item.type) {
-//                    oldItem.copy(count = oldItem.count + 1)
-//                } else {
-//                    oldItem
-//                }
-//            }
-//        }
-//        val newFeedPost = postModel.copy(statistics = newStatistic)
-//        val newPosts = oldPosts.apply {
-//            replaceAll {
-//                if (it.id == newFeedPost.id) {
-//                    newFeedPost
-//                } else {
-//                    it
-//                }
-//            }
-//        }
-//        _screenState.value = NewsFeedScreenState.Posts(posts = newPosts)
-//    }
+    fun updateCount(postModel: FeedPostModel, item: StatisticItem) {
+        val currentState = _screenState.value
+        if (currentState !is NewsFeedScreenState.Posts) return
+        val oldPosts = currentState.posts.toMutableList()
+        val oldStatistic = postModel.statistics
+        val newStatistic = oldStatistic.toMutableList().apply {
+            replaceAll { oldItem ->
+                if (oldItem.type == item.type) {
+                    oldItem.copy(count = oldItem.count + 1)
+                } else {
+                    oldItem
+                }
+            }
+        }
+        val newFeedPost = postModel.copy(statistics = newStatistic)
+        val newPosts = oldPosts.apply {
+            replaceAll {
+                if (it.id == newFeedPost.id) {
+                    newFeedPost
+                } else {
+                    it
+                }
+            }
+        }
+        _screenState.value = NewsFeedScreenState.Posts(posts = newPosts)
+    }
 }

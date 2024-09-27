@@ -22,7 +22,11 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
         val token = VKAccessToken.restore(storage)
         val loggedIn = token != null && token.isValid
         Log.d("LoginViewModel", "Token: ${token?.accessToken}")
-        _authState.value = if (loggedIn) LoginState.Authorized else LoginState.NotAuthorized
+        _authState.value = if (loggedIn) {
+            LoginState.Authorized
+        } else {
+            LoginState.NotAuthorized
+        }
     }
 
 

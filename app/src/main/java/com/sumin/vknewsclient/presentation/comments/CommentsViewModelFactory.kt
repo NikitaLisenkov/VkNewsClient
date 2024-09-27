@@ -3,7 +3,7 @@ package com.sumin.vknewsclient.presentation.comments
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.sumin.vknewsclient.domain.post.FeedPostModel
+import com.sumin.vknewsclient.domain.model.post.FeedPostModel
 
 @Suppress("UNCHECKED_CAST")
 class CommentsViewModelFactory(

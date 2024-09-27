@@ -3,9 +3,9 @@ package com.sumin.vknewsclient.data.repository
 import android.app.Application
 import com.sumin.vknewsclient.data.mapper.NewsFeedMapper
 import com.sumin.vknewsclient.di.ServiceLocator
-import com.sumin.vknewsclient.domain.comment.PostComment
-import com.sumin.vknewsclient.domain.post.FeedPostModel
-import com.sumin.vknewsclient.domain.post.StatisticItem
+import com.sumin.vknewsclient.domain.model.comment.PostComment
+import com.sumin.vknewsclient.domain.model.post.FeedPostModel
+import com.sumin.vknewsclient.domain.model.post.StatisticItem
 import com.sumin.vknewsclient.domain.repository.NewsFeedRepository
 import com.vk.api.sdk.VKPreferencesKeyValueStorage
 import com.vk.api.sdk.auth.VKAccessToken

@@ -33,8 +33,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.sumin.vknewsclient.R
-import com.sumin.vknewsclient.domain.comment.PostComment
-import com.sumin.vknewsclient.domain.post.FeedPostModel
+import com.sumin.vknewsclient.domain.model.comment.PostComment
+import com.sumin.vknewsclient.domain.model.post.FeedPostModel
 
 @Composable
 fun CommentsScreen(

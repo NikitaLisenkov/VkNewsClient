@@ -4,7 +4,8 @@ import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sumin.vknewsclient.data.repository.NewsFeedRepositoryImpl
-import com.sumin.vknewsclient.domain.post.FeedPostModel
+import com.sumin.vknewsclient.domain.model.post.FeedPostModel
+import com.sumin.vknewsclient.domain.usecase.GetCommentsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,13 +22,15 @@ class CommentsViewModel(
 
     private val repo = NewsFeedRepositoryImpl(application)
 
+    private val getCommentsUseCase = GetCommentsUseCase(repo)
+
     init {
         loadComments(feedPost)
     }
 
     private fun loadComments(feedPost: FeedPostModel) {
         viewModelScope.launch {
-            val comments = repo.getComments(feedPost)
+            val comments = getCommentsUseCase(feedPost)
             _screenState.value = CommentsScreenState.Comments(
                 post = feedPost,
                 comments = comments
