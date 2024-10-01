@@ -1,5 +1,6 @@
 package com.sumin.vknewsclient.domain.repository
 
+import com.sumin.vknewsclient.domain.model.comment.CommentsData
 import com.sumin.vknewsclient.domain.model.comment.PostComment
 import com.sumin.vknewsclient.domain.model.post.FeedPostModel
 
@@ -11,5 +12,5 @@ interface NewsFeedRepository {
 
     suspend fun deleteItem(feedPost: FeedPostModel)
 
-    suspend fun getComments(feedPost: FeedPostModel): List<PostComment>
+    suspend fun getComments(feedPost: FeedPostModel, offset: Int = 0): CommentsData
 }

@@ -36,33 +36,35 @@ class NewsFeedViewModel(application: Application) : AndroidViewModel(application
 
     private fun loadRecommendations() {
         viewModelScope.launch {
-            val feedPosts = repo.loadPosts()
+            val feedPosts = getRecommendationsUseCase()
             _screenState.value = NewsFeedScreenState.Posts(posts = feedPosts)
         }
     }
 
 
     fun loadNextRecommendations() {
-        _screenState.value = NewsFeedScreenState.Posts(
-            posts = repo.feedPosts,
-            nextDataIsLoading = true
-        )
+        viewModelScope.launch {
+            _screenState.value = NewsFeedScreenState.Posts(
+                posts = getRecommendationsUseCase(),
+                nextDataIsLoading = true
+            )
+        }
         loadRecommendations()
     }
 
 
     fun deletePost(feedPost: FeedPostModel) {
         viewModelScope.launch {
-            repo.deleteItem(feedPost)
-            _screenState.value = NewsFeedScreenState.Posts(posts = repo.feedPosts)
+            deletePostUseCase(feedPost)
+            _screenState.value = NewsFeedScreenState.Posts(posts = getRecommendationsUseCase())
         }
     }
 
 
     fun changeLikeStatus(feedPost: FeedPostModel) {
         viewModelScope.launch {
-            repo.changeLike(feedPost)
-            _screenState.value = NewsFeedScreenState.Posts(posts = repo.feedPosts)
+            changeLikeUseCase(feedPost)
+            _screenState.value = NewsFeedScreenState.Posts(posts = getRecommendationsUseCase())
         }
     }
 

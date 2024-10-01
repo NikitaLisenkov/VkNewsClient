@@ -9,6 +9,7 @@ import com.sumin.vknewsclient.domain.usecase.GetCommentsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class CommentsViewModel(
@@ -16,25 +17,48 @@ class CommentsViewModel(
     application: Application
 ) : ViewModel() {
 
-    private val _screenState: MutableStateFlow<CommentsScreenState> =
-        MutableStateFlow(CommentsScreenState.Initial)
-    val screenState: StateFlow<CommentsScreenState> = _screenState.asStateFlow()
-
     private val repo = NewsFeedRepositoryImpl(application)
 
     private val getCommentsUseCase = GetCommentsUseCase(repo)
 
-    init {
-        loadComments(feedPost)
-    }
+    private var offset = 0
+    private var totalCount = -1
 
-    private fun loadComments(feedPost: FeedPostModel) {
+    private val _screenState: MutableStateFlow<CommentsScreenState> =
+        MutableStateFlow(CommentsScreenState())
+    val screenState: StateFlow<CommentsScreenState> = _screenState.asStateFlow()
+
+
+    fun loadComments(feedPost: FeedPostModel) {
+        val allLoaded = _screenState.value.comments.size == totalCount
+        val isLoading = _screenState.value.isLoading
+        if (allLoaded || isLoading) return
+
+        _screenState.update { state ->
+            state.copy(isLoading = true)
+        }
+
         viewModelScope.launch {
-            val comments = getCommentsUseCase(feedPost)
-            _screenState.value = CommentsScreenState.Comments(
-                post = feedPost,
-                comments = comments
-            )
+            val response = getCommentsUseCase(feedPost)
+            totalCount = response.totalCount
+
+            _screenState.update { state ->
+                val updatedComments = (state.comments + response.comments)
+                    .distinctBy { comment ->
+                        comment.id
+                    }
+
+                state.copy(
+                    comments = updatedComments,
+                    isLoading = false
+                )
+            }
+
+            if (response.comments.isEmpty()) {
+                totalCount = _screenState.value.comments.size
+            }
+
+            offset = _screenState.value.comments.size
         }
     }
 }

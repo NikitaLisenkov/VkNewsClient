@@ -3,7 +3,7 @@ package com.sumin.vknewsclient.data.repository
 import android.app.Application
 import com.sumin.vknewsclient.data.mapper.NewsFeedMapper
 import com.sumin.vknewsclient.di.ServiceLocator
-import com.sumin.vknewsclient.domain.model.comment.PostComment
+import com.sumin.vknewsclient.domain.model.comment.CommentsData
 import com.sumin.vknewsclient.domain.model.post.FeedPostModel
 import com.sumin.vknewsclient.domain.model.post.StatisticItem
 import com.sumin.vknewsclient.domain.repository.NewsFeedRepository
@@ -37,10 +37,14 @@ class NewsFeedRepositoryImpl(application: Application) : NewsFeedRepository {
         if (startFrom == null && feedPosts.isNotEmpty()) return feedPosts
 
         val response =
-            if (startFrom == null) api.loadNewsFeed(getAccessToken()) else api.loadNextNewsFeed(
-                getAccessToken(),
-                startFrom
-            )
+            if (startFrom == null) {
+                api.loadNewsFeed(getAccessToken())
+            } else {
+                api.loadNextNewsFeed(
+                    getAccessToken(),
+                    startFrom
+                )
+            }
         nextFrom = response.newsFeedContent.nextFrom
         val posts = mapper.mapNewsDtoToDomain(response)
         _feedPosts.addAll(posts)
@@ -96,13 +100,19 @@ class NewsFeedRepositoryImpl(application: Application) : NewsFeedRepository {
     }
 
 
-    override suspend fun getComments(feedPost: FeedPostModel): List<PostComment> {
-        val comments = api.getComments(
+    override suspend fun getComments(feedPost: FeedPostModel, offset: Int): CommentsData {
+        val response = api.getComments(
             token = getAccessToken(),
             ownerId = feedPost.communityId,
-            postId = feedPost.id
+            postId = feedPost.id,
+            offset = offset,
+            count = PAGE_SIZE
         )
-        return mapper.mapCommentsDtoToDomain(comments)
+        return mapper.mapCommentsDtoToDomain(response)
+    }
+
+    companion object {
+        private const val PAGE_SIZE: Int = 30
     }
 }
 
