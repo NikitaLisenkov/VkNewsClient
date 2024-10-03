@@ -1,22 +1,23 @@
 package com.sumin.vknewsclient.data.repository
 
-import android.app.Application
 import com.sumin.vknewsclient.data.mapper.NewsFeedMapper
-import com.sumin.vknewsclient.di.ServiceLocator
+import com.sumin.vknewsclient.data.network.VkApi
 import com.sumin.vknewsclient.domain.model.comment.CommentsData
 import com.sumin.vknewsclient.domain.model.post.FeedPostModel
 import com.sumin.vknewsclient.domain.model.post.StatisticItem
 import com.sumin.vknewsclient.domain.repository.NewsFeedRepository
 import com.vk.api.sdk.VKPreferencesKeyValueStorage
 import com.vk.api.sdk.auth.VKAccessToken
+import javax.inject.Inject
 
-class NewsFeedRepositoryImpl(application: Application) : NewsFeedRepository {
+class NewsFeedRepositoryImpl @Inject constructor(
+    private val storage: VKPreferencesKeyValueStorage,
+    private val api: VkApi,
+    private val mapper: NewsFeedMapper
+) : NewsFeedRepository {
 
-    private val storage = VKPreferencesKeyValueStorage(application)
-    private val token = VKAccessToken.restore(storage)
-
-    private val api = ServiceLocator.api
-    private val mapper = NewsFeedMapper()
+    private val token
+        get() = VKAccessToken.restore(storage)
 
     private val _feedPosts = mutableListOf<FeedPostModel>()
     val feedPosts: List<FeedPostModel>
@@ -110,6 +111,7 @@ class NewsFeedRepositoryImpl(application: Application) : NewsFeedRepository {
         )
         return mapper.mapCommentsDtoToDomain(response)
     }
+
 
     companion object {
         private const val PAGE_SIZE: Int = 30

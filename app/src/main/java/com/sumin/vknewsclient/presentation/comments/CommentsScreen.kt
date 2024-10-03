@@ -1,6 +1,5 @@
 package com.sumin.vknewsclient.presentation.comments
 
-import android.app.Application
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,7 +30,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -40,23 +38,17 @@ import coil.compose.AsyncImage
 import com.sumin.vknewsclient.R
 import com.sumin.vknewsclient.domain.model.comment.PostComment
 import com.sumin.vknewsclient.domain.model.post.FeedPostModel
+import com.sumin.vknewsclient.presentation.ViewModelFactory
 import com.sumin.vknewsclient.presentation.ui.theme.DarkBlue
 
 @Composable
 fun CommentsScreen(
+    factory: ViewModelFactory,
     onBackPressed: () -> Unit,
     feedPost: FeedPostModel
 ) {
-    val viewModel: CommentsViewModel =
-        viewModel(
-            factory = CommentsViewModelFactory(
-                feedPost,
-                LocalContext.current.applicationContext as Application
-            )
-        )
-
+    val viewModel: CommentsViewModel = viewModel(factory = factory)
     val state = viewModel.screenState.collectAsState()
-
     val currentState = state.value
 
     Scaffold(

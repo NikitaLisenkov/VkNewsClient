@@ -1,20 +1,17 @@
 package com.sumin.vknewsclient.presentation.login
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import com.sumin.vknewsclient.domain.usecase.CheckAuthUseCase
-import com.vk.api.sdk.VKPreferencesKeyValueStorage
 import com.vk.api.sdk.auth.VKAuthenticationResult
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import javax.inject.Inject
 
-class LoginViewModel(
-    application: Application
-) : AndroidViewModel(application) {
+class LoginViewModel @Inject constructor(
+    checkAuthUseCase: CheckAuthUseCase
+) : ViewModel() {
 
-    private val storage = VKPreferencesKeyValueStorage(application)
-    private val checkAuthUseCase = CheckAuthUseCase(storage)
 
     private val _authState: MutableStateFlow<LoginState> =
         MutableStateFlow(LoginState.Initial)

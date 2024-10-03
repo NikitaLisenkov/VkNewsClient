@@ -1,9 +1,7 @@
 package com.sumin.vknewsclient.presentation.news
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sumin.vknewsclient.data.repository.NewsFeedRepositoryImpl
 import com.sumin.vknewsclient.domain.model.post.FeedPostModel
 import com.sumin.vknewsclient.domain.model.post.StatisticItem
 import com.sumin.vknewsclient.domain.usecase.ChangeLikeUseCase
@@ -13,20 +11,20 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class NewsFeedViewModel(application: Application) : AndroidViewModel(application) {
+class NewsFeedViewModel @Inject constructor(
+    private val getRecommendationsUseCase: GetRecommendationsUseCase,
+    private val deletePostUseCase: DeletePostUseCase,
+    private val changeLikeUseCase: ChangeLikeUseCase
+) :
+    ViewModel() {
 
     private val initState = NewsFeedScreenState.Initial
 
     private val _screenState: MutableStateFlow<NewsFeedScreenState> =
         MutableStateFlow(initState)
     val screenState: StateFlow<NewsFeedScreenState> = _screenState.asStateFlow()
-
-    private val repo = NewsFeedRepositoryImpl(application)
-
-    private val getRecommendationsUseCase = GetRecommendationsUseCase(repo)
-    private val deletePostUseCase = DeletePostUseCase(repo)
-    private val changeLikeUseCase = ChangeLikeUseCase(repo)
 
     init {
         _screenState.value = NewsFeedScreenState.Loading
