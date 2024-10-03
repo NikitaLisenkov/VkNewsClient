@@ -18,11 +18,6 @@ interface ViewModelModule {
     fun bindNewsFeedViewModel(viewModel: NewsFeedViewModel): ViewModel
 
     @IntoMap
-    @ViewModelKey(CommentsViewModel::class)
-    @Binds
-    fun bindCommentsViewModel(viewModel: CommentsViewModel): ViewModel
-
-    @IntoMap
     @ViewModelKey(LoginViewModel::class)
     @Binds
     fun bindLoginViewModel(viewModel: LoginViewModel): ViewModel

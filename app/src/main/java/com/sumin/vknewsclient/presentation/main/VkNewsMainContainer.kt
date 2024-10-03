@@ -81,7 +81,6 @@ fun MainScreen(factory: ViewModelFactory) {
             },
             commentsScreenContent = { feedPost ->
                 CommentsScreen(
-                    factory = factory,
                     onBackPressed = { navState.navHostController.popBackStack() },
                     feedPost = feedPost
                 )
