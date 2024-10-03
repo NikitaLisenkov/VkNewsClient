@@ -2,10 +2,12 @@ package com.sumin.vknewsclient.domain.model.post
 
 import android.os.Bundle
 import android.os.Parcelable
+import androidx.compose.runtime.Immutable
 import androidx.navigation.NavType
 import com.google.gson.Gson
 import kotlinx.parcelize.Parcelize
 
+@Immutable
 @Parcelize
 data class FeedPostModel(
     val id: Long,

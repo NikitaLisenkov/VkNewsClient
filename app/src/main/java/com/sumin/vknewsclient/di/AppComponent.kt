@@ -1,6 +1,7 @@
 package com.sumin.vknewsclient.di
 
 import android.content.Context
+import com.sumin.vknewsclient.presentation.ViewModelFactory
 import com.sumin.vknewsclient.presentation.main.MainActivity
 import dagger.BindsInstance
 import dagger.Component
@@ -14,8 +15,10 @@ import dagger.Component
 )
 
 interface AppComponent {
-
-    fun inject(activity: MainActivity)
+    /**
+     * Используется вместо функции inject для предоставления фабрики VM
+     */
+    fun getViewModelFactory(): ViewModelFactory
 
     fun getCommentsScreenComponentFactory(): CommentsScreenComponent.Factory
 
