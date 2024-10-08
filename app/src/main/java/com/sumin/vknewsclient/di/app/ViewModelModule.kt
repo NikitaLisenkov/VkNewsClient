@@ -1,7 +1,6 @@
-package com.sumin.vknewsclient.di
+package com.sumin.vknewsclient.di.app
 
 import androidx.lifecycle.ViewModel
-import com.sumin.vknewsclient.presentation.comments.CommentsViewModel
 import com.sumin.vknewsclient.presentation.login.LoginViewModel
 import com.sumin.vknewsclient.presentation.news.NewsFeedViewModel
 import dagger.Binds

@@ -34,7 +34,7 @@ class NewsFeedViewModel @Inject constructor(
 
     private fun loadRecommendations() {
         viewModelScope.launch {
-            val feedPosts = getRecommendationsUseCase()
+            val feedPosts = getRecommendationsUseCase.invoke()
             _screenState.value = NewsFeedScreenState.Posts(posts = feedPosts)
         }
     }
@@ -43,7 +43,7 @@ class NewsFeedViewModel @Inject constructor(
     fun loadNextRecommendations() {
         viewModelScope.launch {
             _screenState.value = NewsFeedScreenState.Posts(
-                posts = getRecommendationsUseCase(),
+                posts = getRecommendationsUseCase.invoke(),
                 nextDataIsLoading = true
             )
         }
@@ -53,16 +53,18 @@ class NewsFeedViewModel @Inject constructor(
 
     fun deletePost(feedPost: FeedPostModel) {
         viewModelScope.launch {
-            deletePostUseCase(feedPost)
-            _screenState.value = NewsFeedScreenState.Posts(posts = getRecommendationsUseCase())
+            deletePostUseCase.invoke(feedPost)
+            _screenState.value =
+                NewsFeedScreenState.Posts(posts = getRecommendationsUseCase.invoke())
         }
     }
 
 
     fun changeLikeStatus(feedPost: FeedPostModel) {
         viewModelScope.launch {
-            changeLikeUseCase(feedPost)
-            _screenState.value = NewsFeedScreenState.Posts(posts = getRecommendationsUseCase())
+            changeLikeUseCase.invoke(feedPost)
+            _screenState.value =
+                NewsFeedScreenState.Posts(posts = getRecommendationsUseCase.invoke())
         }
     }
 

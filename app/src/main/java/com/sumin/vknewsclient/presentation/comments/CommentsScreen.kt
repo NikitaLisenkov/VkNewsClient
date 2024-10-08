@@ -56,8 +56,7 @@ fun CommentsScreen(
     CommentsScreenContent(
         screenState = screenState,
         onBackPressed = onBackPressed,
-        viewModel = viewModel,
-        feedPost = feedPost
+        viewModel = viewModel
     )
 }
 
@@ -66,8 +65,7 @@ fun CommentsScreen(
 private fun CommentsScreenContent(
     screenState: State<CommentsScreenState>,
     onBackPressed: () -> Unit,
-    viewModel: CommentsViewModel,
-    feedPost: FeedPostModel
+    viewModel: CommentsViewModel
 ) {
     val currentState = screenState.value
 
@@ -118,7 +116,7 @@ private fun CommentsScreenContent(
                     }
                 } else {
                     SideEffect {
-                        viewModel.loadComments(feedPost)
+                        viewModel.loadComments()
                     }
                 }
             }

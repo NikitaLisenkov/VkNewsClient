@@ -1,8 +1,8 @@
-package com.sumin.vknewsclient.di
+package com.sumin.vknewsclient.di.app
 
 import android.content.Context
+import com.sumin.vknewsclient.di.comments.CommentsScreenComponent
 import com.sumin.vknewsclient.presentation.ViewModelFactory
-import com.sumin.vknewsclient.presentation.main.MainActivity
 import dagger.BindsInstance
 import dagger.Component
 

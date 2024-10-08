@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 class GetCommentsUseCase @Inject constructor(private val repo: NewsFeedRepository) {
 
-    suspend operator fun invoke(feedPost: FeedPostModel): CommentsData {
-        return repo.getComments(feedPost)
+    suspend operator fun invoke(feedPost: FeedPostModel, offset: Int): CommentsData {
+        return repo.getComments(feedPost, offset)
     }
 }
