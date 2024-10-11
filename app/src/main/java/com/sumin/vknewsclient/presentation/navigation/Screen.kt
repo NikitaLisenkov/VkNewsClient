@@ -1,8 +1,8 @@
 package com.sumin.vknewsclient.presentation.navigation
 
-import android.net.Uri
 import com.google.gson.Gson
 import com.sumin.vknewsclient.domain.model.post.FeedPostModel
+import com.sumin.vknewsclient.utils.encode
 
 sealed class Screen(val route: String) {
 
@@ -16,11 +16,6 @@ sealed class Screen(val route: String) {
             val feedPostJson = Gson().toJson(feedPost)
             return "$ROUTE_FOR_ARGS/${feedPostJson.encode()}"
         }
-    }
-
-
-    fun String.encode(): String {
-        return Uri.encode(this)
     }
 
 

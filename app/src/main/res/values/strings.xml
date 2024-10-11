@@ -6,6 +6,11 @@
     <string name="navigation_item_profile">Профиль</string>
     <string name="login">Login</string>
     <string name="comments_title">Комментарии</string>
+    <string name="phone">Телефон: %1$s</string>
+    <string name="city">Город: %1$s</string>
+    <string name="status">Статус: %1$s</string>
+    <string name="b_date">Дата рождения: %1$s</string>
+    <string name="something_went_wrong">Something went wrong</string>
 
     <integer name="com_vk_sdk_AppId">52270801</integer>
 </resources>

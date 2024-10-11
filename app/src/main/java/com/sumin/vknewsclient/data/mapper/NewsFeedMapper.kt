@@ -6,9 +6,7 @@ import com.sumin.vknewsclient.domain.model.comment.CommentsData
 import com.sumin.vknewsclient.domain.model.comment.PostComment
 import com.sumin.vknewsclient.domain.model.post.FeedPostModel
 import com.sumin.vknewsclient.domain.model.post.StatisticItem
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import com.sumin.vknewsclient.utils.mapTimestampToDate
 import javax.inject.Inject
 import kotlin.math.absoluteValue
 
@@ -63,11 +61,5 @@ class NewsFeedMapper @Inject constructor() {
             comments = result,
             totalCount = response.content.totalCount
         )
-    }
-
-
-    private fun mapTimestampToDate(timestamp: Long): String {
-        val date = Date(timestamp * 1000)
-        return SimpleDateFormat("dd MMMM yyyy, hh:mm", Locale.getDefault()).format(date)
     }
 }

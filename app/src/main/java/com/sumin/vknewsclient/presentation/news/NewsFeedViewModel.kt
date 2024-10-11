@@ -17,8 +17,7 @@ class NewsFeedViewModel @Inject constructor(
     private val getRecommendationsUseCase: GetRecommendationsUseCase,
     private val deletePostUseCase: DeletePostUseCase,
     private val changeLikeUseCase: ChangeLikeUseCase
-) :
-    ViewModel() {
+) : ViewModel() {
 
     private val initState = NewsFeedScreenState.Initial
 
@@ -69,11 +68,11 @@ class NewsFeedViewModel @Inject constructor(
     }
 
 
-    fun updateCount(postModel: FeedPostModel, item: StatisticItem) {
+    fun updateCount(post: FeedPostModel, item: StatisticItem) {
         val currentState = _screenState.value
         if (currentState !is NewsFeedScreenState.Posts) return
         val oldPosts = currentState.posts.toMutableList()
-        val oldStatistic = postModel.statistics
+        val oldStatistic = post.statistics
         val newStatistic = oldStatistic.toMutableList().apply {
             replaceAll { oldItem ->
                 if (oldItem.type == item.type) {
@@ -83,7 +82,7 @@ class NewsFeedViewModel @Inject constructor(
                 }
             }
         }
-        val newFeedPost = postModel.copy(statistics = newStatistic)
+        val newFeedPost = post.copy(statistics = newStatistic)
         val newPosts = oldPosts.apply {
             replaceAll {
                 if (it.id == newFeedPost.id) {
