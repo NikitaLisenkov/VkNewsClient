@@ -1,34 +1,21 @@
 package com.sumin.vknewsclient.data.repository
 
-import android.util.Log
 import com.sumin.vknewsclient.data.mapper.NewsFeedMapper
 import com.sumin.vknewsclient.data.network.VkApi
 import com.sumin.vknewsclient.domain.model.comment.CommentsData
 import com.sumin.vknewsclient.domain.model.post.FeedPostModel
 import com.sumin.vknewsclient.domain.model.post.StatisticItem
 import com.sumin.vknewsclient.domain.repository.NewsFeedRepository
-import com.vk.api.sdk.VKPreferencesKeyValueStorage
-import com.vk.api.sdk.auth.VKAccessToken
 import javax.inject.Inject
 
 class NewsFeedRepositoryImpl @Inject constructor(
-    private val storage: VKPreferencesKeyValueStorage,
     private val api: VkApi,
     private val mapper: NewsFeedMapper
 ) : NewsFeedRepository {
 
-    private val token
-        get() = VKAccessToken.restore(storage)
-
     private val _feedPosts = mutableListOf<FeedPostModel>()
     val feedPosts: List<FeedPostModel>
         get() = _feedPosts.toList()
-
-    private fun getAccessToken(): String {
-        val token = token?.accessToken ?: throw IllegalStateException("Token is null")
-        Log.d("qwe", "Token: $token")
-        return token
-    }
 
     private var nextFrom: String? = null
 
@@ -42,10 +29,9 @@ class NewsFeedRepositoryImpl @Inject constructor(
 
         val response =
             if (startFrom == null) {
-                api.loadNewsFeed(getAccessToken())
+                api.loadNewsFeed()
             } else {
                 api.loadNextNewsFeed(
-                    getAccessToken(),
                     startFrom
                 )
             }
@@ -58,7 +44,6 @@ class NewsFeedRepositoryImpl @Inject constructor(
 
     override suspend fun deleteItem(feedPost: FeedPostModel) {
         api.ignoreItem(
-            token = getAccessToken(),
             ownerId = feedPost.communityId,
             postId = feedPost.id
         )
@@ -80,13 +65,11 @@ class NewsFeedRepositoryImpl @Inject constructor(
     override suspend fun changeLike(feedPost: FeedPostModel) {
         val response = if (feedPost.isLiked) {
             api.deleteLike(
-                token = getAccessToken(),
                 ownerId = feedPost.communityId,
                 postId = feedPost.id
             )
         } else {
             api.addLike(
-                token = getAccessToken(),
                 ownerId = feedPost.communityId,
                 postId = feedPost.id
             )
@@ -106,7 +89,6 @@ class NewsFeedRepositoryImpl @Inject constructor(
 
     override suspend fun getComments(feedPost: FeedPostModel, offset: Int): CommentsData {
         val response = api.getComments(
-            token = getAccessToken(),
             ownerId = feedPost.communityId,
             postId = feedPost.id,
             offset = offset,

@@ -25,27 +25,25 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.sumin.vknewsclient.R
 import com.sumin.vknewsclient.domain.model.profile.ProfileModel
+import com.sumin.vknewsclient.presentation.getApplicationComponent
+import com.sumin.vknewsclient.presentation.ui.theme.DarkBlue
 
 @Preview
 @Composable
 fun ProfileScreen() {
-    val viewModel: ProfileViewModel = viewModel()
+
+    val component = getApplicationComponent()
+    val viewModel: ProfileViewModel = viewModel(factory = component.getViewModelFactory())
     val screenState = viewModel.profileState.collectAsState()
     val currentState = screenState.value
 
-    LaunchedEffect(Unit) {
-        viewModel.loadProfile()
-    }
-
     when (currentState) {
-        is ProfileScreenState.Initial -> {}
-
         is ProfileScreenState.Loading -> {
             LoadingScreen()
         }
 
         is ProfileScreenState.Content -> {
-            ProfileContent((screenState as ProfileScreenState.Content).profile)
+            ProfileContent(currentState.profile)
         }
 
         is ProfileScreenState.Error -> {
@@ -55,17 +53,17 @@ fun ProfileScreen() {
 }
 
 @Composable
-fun LoadingScreen() {
+private fun LoadingScreen() {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        CircularProgressIndicator()
+        CircularProgressIndicator(color = DarkBlue)
     }
 }
 
 @Composable
-fun ErrorScreen() {
+private fun ErrorScreen() {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center

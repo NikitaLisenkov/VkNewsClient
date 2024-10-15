@@ -21,6 +21,7 @@ import com.sumin.vknewsclient.presentation.comments.CommentsScreen
 import com.sumin.vknewsclient.presentation.navigation.AppNavGraph
 import com.sumin.vknewsclient.presentation.navigation.rememberNavState
 import com.sumin.vknewsclient.presentation.news.NewsFeedScreen
+import com.sumin.vknewsclient.presentation.profile.ProfileScreen
 
 
 @Composable
@@ -87,7 +88,7 @@ fun MainScreen() {
                 TextCounter(name = "Favourite")
             },
             profileScreenContent = {
-                TextCounter(name = "Profile")
+                ProfileScreen()
             })
     }
 }

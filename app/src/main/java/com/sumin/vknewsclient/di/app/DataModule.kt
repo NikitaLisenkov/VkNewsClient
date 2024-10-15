@@ -3,9 +3,12 @@ package com.sumin.vknewsclient.di.app
 import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.sumin.vknewsclient.data.network.AuthInterceptor
 import com.sumin.vknewsclient.data.network.VkApi
 import com.sumin.vknewsclient.data.repository.NewsFeedRepositoryImpl
+import com.sumin.vknewsclient.data.repository.ProfileRepositoryImpl
 import com.sumin.vknewsclient.domain.repository.NewsFeedRepository
+import com.sumin.vknewsclient.domain.repository.ProfileRepository
 import com.vk.api.sdk.VKPreferencesKeyValueStorage
 import dagger.Binds
 import dagger.Module
@@ -20,7 +23,11 @@ interface DataModule {
 
     @ApplicationScope
     @Binds
-    fun bindRepository(impl: NewsFeedRepositoryImpl): NewsFeedRepository
+    fun bindNewsRepo(impl: NewsFeedRepositoryImpl): NewsFeedRepository
+
+    @ApplicationScope
+    @Binds
+    fun bindProfileRepo(impl: ProfileRepositoryImpl): ProfileRepository
 
     companion object {
 
@@ -28,12 +35,14 @@ interface DataModule {
 
         @ApplicationScope
         @Provides
-        fun provideOkHttp(): OkHttpClient {
+        fun provideOkHttp(storage: VKPreferencesKeyValueStorage): OkHttpClient {
             val logging = HttpLoggingInterceptor().apply {
                 level = HttpLoggingInterceptor.Level.BODY
             }
+            val authInterceptor = AuthInterceptor(storage)
             return OkHttpClient
                 .Builder()
+                .addInterceptor(authInterceptor)
                 .addInterceptor(logging)
                 .build()
         }

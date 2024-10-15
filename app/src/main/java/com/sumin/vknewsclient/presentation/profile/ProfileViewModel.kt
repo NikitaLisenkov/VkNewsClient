@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sumin.vknewsclient.domain.usecase.GetProfileUseCase
 import com.sumin.vknewsclient.utils.runSuspendCatching
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,13 +16,16 @@ class ProfileViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _profileState: MutableStateFlow<ProfileScreenState> =
-        MutableStateFlow(ProfileScreenState.Initial)
+        MutableStateFlow(ProfileScreenState.Loading)
     val profileState: StateFlow<ProfileScreenState> = _profileState.asStateFlow()
 
-    fun loadProfile() {
-        viewModelScope.launch {
-            _profileState.value = ProfileScreenState.Loading
+    init {
+        loadProfile()
+    }
 
+    private fun loadProfile() {
+        viewModelScope.launch {
+            delay(1000)
             runSuspendCatching(
                 block = { getProfileUseCase.invoke() },
                 onSuccess = { profile ->
