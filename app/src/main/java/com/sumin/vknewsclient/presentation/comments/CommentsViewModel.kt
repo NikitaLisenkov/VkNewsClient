@@ -24,7 +24,7 @@ class CommentsViewModel @Inject constructor(
     val screenState: StateFlow<CommentsScreenState> = _screenState.asStateFlow()
 
 
-    fun loadComments(feedPost: FeedPostModel) {
+    fun loadComments() {
         val allLoaded = _screenState.value.comments.size == totalCount
         val isLoading = _screenState.value.isLoading
         if (allLoaded || isLoading) return
@@ -34,7 +34,7 @@ class CommentsViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            val response = getCommentsUseCase(feedPost)
+            val response = getCommentsUseCase.invoke(feedPost, offset)
             totalCount = response.totalCount
 
             _screenState.update { state ->

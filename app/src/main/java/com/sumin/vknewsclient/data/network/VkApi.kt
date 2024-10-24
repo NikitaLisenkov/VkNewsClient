@@ -2,6 +2,7 @@ package com.sumin.vknewsclient.data.network
 
 import com.sumin.vknewsclient.data.network.model.CommentsResponseDto
 import com.sumin.vknewsclient.data.network.model.LikesCountResponseDto
+import com.sumin.vknewsclient.data.network.model.MyProfileResponseDto
 import com.sumin.vknewsclient.data.network.model.NewsFeedResponseDto
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -48,6 +49,11 @@ interface VkApi {
         @Query("owner_id") ownerId: Long,
         @Query("item_id") postId: Long
     ): LikesCountResponseDto
+
+    @GET("account.getProfileInfo?v=$VERSION")
+    suspend fun getProfileInfo(
+        @Query("access_token") token: String
+    ): MyProfileResponseDto
 
 
     companion object {

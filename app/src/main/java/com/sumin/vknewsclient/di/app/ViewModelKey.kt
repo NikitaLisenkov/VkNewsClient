@@ -1,4 +1,4 @@
-package com.sumin.vknewsclient.di
+package com.sumin.vknewsclient.di.app
 
 import androidx.lifecycle.ViewModel
 import dagger.MapKey

@@ -18,7 +18,7 @@ class LoginViewModel @Inject constructor(
     val authState: StateFlow<LoginState> = _authState.asStateFlow()
 
     init {
-        val loggedIn = checkAuthUseCase()
+        val loggedIn = checkAuthUseCase.invoke()
         _authState.value = if (loggedIn) {
             LoginState.Authorized
         } else {

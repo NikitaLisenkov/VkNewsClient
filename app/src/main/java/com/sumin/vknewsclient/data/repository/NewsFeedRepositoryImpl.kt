@@ -1,5 +1,6 @@
 package com.sumin.vknewsclient.data.repository
 
+import android.util.Log
 import com.sumin.vknewsclient.data.mapper.NewsFeedMapper
 import com.sumin.vknewsclient.data.network.VkApi
 import com.sumin.vknewsclient.domain.model.comment.CommentsData
@@ -24,7 +25,9 @@ class NewsFeedRepositoryImpl @Inject constructor(
         get() = _feedPosts.toList()
 
     private fun getAccessToken(): String {
-        return token?.accessToken ?: throw IllegalStateException("Token is null")
+        val token = token?.accessToken ?: throw IllegalStateException("Token is null")
+        Log.d("qwe", "Token: $token")
+        return token
     }
 
     private var nextFrom: String? = null
