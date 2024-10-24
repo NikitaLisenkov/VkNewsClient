@@ -49,7 +49,7 @@ fun ScreenComments(
         Scaffold(topBar = {
             TopAppBar(
                 title = {
-                    Text(text = "Comments for FeedPost id: ${currentState.post.id}")
+                    Text(text = "Comments for FeedPost id: ${currentState.post.contentText}")
                 },
                 navigationIcon = {
                     IconButton(onClick = { onBackPressed() }) {

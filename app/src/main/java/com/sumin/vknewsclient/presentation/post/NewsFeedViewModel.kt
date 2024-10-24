@@ -10,7 +10,10 @@ import kotlinx.coroutines.flow.asStateFlow
 class NewsFeedViewModel : ViewModel() {
 
     private val sourceList = List(10) {
-        FeedPostModel(id = it)
+        FeedPostModel(
+            id = it,
+            contentText = "Co/ntent: $it"
+        )
     }
 
     private val initState = NewsFeedScreenState.Posts(posts = sourceList)
