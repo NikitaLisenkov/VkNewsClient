@@ -1,4 +1,4 @@
-package com.sumin.vknewsclient.presentation.post
+package com.sumin.vknewsclient.presentation.news
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -23,11 +23,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.sumin.vknewsclient.domain.model.post.FeedPostModel
+import com.sumin.vknewsclient.domain.post.FeedPostModel
 
 
 @Composable
-fun ScreenHome(
+fun NewsFeedScreen(
     paddingValues: PaddingValues,
     onCommentClick: (FeedPostModel) -> Unit
 ) {
@@ -102,9 +102,8 @@ private fun FeedPosts(
                 dismissContent = {
                     PostCard(
                         feedPostModel = feedPost,
-                        onLikeClick = { statisticItem ->
-
-                            viewModel.updateCount(feedPost, statisticItem)
+                        onLikeClick = { _ ->
+                            viewModel.changeLikeStatus(feedPost)
                         },
                         onCommentClick = {
                             onCommentClick(feedPost)
