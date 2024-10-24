@@ -20,6 +20,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sumin.vknewsclient.domain.model.post.FeedPostModel
+import com.sumin.vknewsclient.presentation.getApplicationComponent
 import com.sumin.vknewsclient.presentation.ui.theme.DarkBlue
 
 
@@ -36,15 +38,37 @@ fun NewsFeedScreen(
     paddingValues: PaddingValues,
     onCommentClick: (FeedPostModel) -> Unit
 ) {
-    val viewModel: NewsFeedViewModel = viewModel()
-
+    val component = getApplicationComponent()
+    val viewModel: NewsFeedViewModel = viewModel(factory = component.getViewModelFactory())
     val screenState = viewModel.screenState.collectAsState(NewsFeedScreenState.Initial)
 
-    val currentState = screenState.value
+    NewsFeedScreenContent(
+        screenState = screenState,
+        paddingValues = paddingValues,
+        onCommentClick = onCommentClick,
+        viewModel = viewModel
+    )
+}
 
-    when (currentState) {
+
+@Composable
+private fun NewsFeedScreenContent(
+    screenState: State<NewsFeedScreenState>,
+    paddingValues: PaddingValues,
+    onCommentClick: (FeedPostModel) -> Unit,
+    viewModel: NewsFeedViewModel
+) {
+    when (val currentState = screenState.value) {
 
         is NewsFeedScreenState.Initial -> {}
+        is NewsFeedScreenState.Loading -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(color = DarkBlue)
+            }
+        }
 
         is NewsFeedScreenState.Posts -> {
             FeedPosts(
@@ -54,15 +78,6 @@ fun NewsFeedScreen(
                 onCommentClick = onCommentClick,
                 nextDataIsLoading = currentState.nextDataIsLoading
             )
-        }
-
-        is NewsFeedScreenState.Loading -> {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator(color = DarkBlue)
-            }
         }
     }
 }

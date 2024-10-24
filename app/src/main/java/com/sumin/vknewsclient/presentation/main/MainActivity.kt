@@ -6,6 +6,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.sumin.vknewsclient.presentation.getApplicationComponent
 import com.sumin.vknewsclient.presentation.login.LoginScreen
 import com.sumin.vknewsclient.presentation.login.LoginState
 import com.sumin.vknewsclient.presentation.login.LoginViewModel
@@ -18,15 +19,17 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            val component = getApplicationComponent()
+            val viewModel: LoginViewModel = viewModel(factory = component.getViewModelFactory())
+            val state = viewModel.authState.collectAsState(LoginState.Initial)
+            val launcher =
+                rememberLauncherForActivityResult(
+                    contract = VK.getVKAuthActivityResultContract()
+                ) {
+                    viewModel.authResult(it)
+                }
+
             VkNewsClientTheme {
-                val viewModel: LoginViewModel = viewModel()
-                val state = viewModel.authState.collectAsState(LoginState.Initial)
-                val launcher =
-                    rememberLauncherForActivityResult(
-                        contract = VK.getVKAuthActivityResultContract()
-                    ) {
-                        viewModel.authResult(it)
-                    }
                 when (state.value) {
                     is LoginState.Authorized -> {
                         MainScreen()

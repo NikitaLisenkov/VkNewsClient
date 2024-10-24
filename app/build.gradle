@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-parcelize'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -47,6 +48,9 @@ android {
 }
 
 dependencies {
+
+    implementation("com.google.dagger:dagger:2.51.1")
+    kapt("com.google.dagger:dagger-compiler:2.51.1")
 
     implementation("com.vk:android-sdk-core:4.0.1")
     implementation("com.vk:android-sdk-api:4.0.1")

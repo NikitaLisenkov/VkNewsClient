@@ -1,9 +1,7 @@
 package com.sumin.vknewsclient.presentation.comments
 
-import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sumin.vknewsclient.data.repository.NewsFeedRepositoryImpl
 import com.sumin.vknewsclient.domain.model.post.FeedPostModel
 import com.sumin.vknewsclient.domain.usecase.GetCommentsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,15 +9,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class CommentsViewModel(
-    feedPost: FeedPostModel,
-    application: Application
+class CommentsViewModel @Inject constructor(
+    private val feedPost: FeedPostModel,
+    private val getCommentsUseCase: GetCommentsUseCase
 ) : ViewModel() {
-
-    private val repo = NewsFeedRepositoryImpl(application)
-
-    private val getCommentsUseCase = GetCommentsUseCase(repo)
 
     private var offset = 0
     private var totalCount = -1
