@@ -1,4 +1,4 @@
-package com.sumin.vknewsclient.presentation
+package com.sumin.vknewsclient.presentation.main
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
