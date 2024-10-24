@@ -1,4 +1,4 @@
-package com.sumin.vknewsclient.domain.model
+package com.sumin.vknewsclient.domain.model.post
 
 data class StatisticItem(
     val type: StatisticType,

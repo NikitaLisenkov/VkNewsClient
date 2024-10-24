@@ -1,4 +1,4 @@
-package com.sumin.vknewsclient.presentation
+package com.sumin.vknewsclient.presentation.post
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -22,13 +22,44 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.sumin.vknewsclient.domain.model.post.FeedPostModel
+
+
+@Composable
+fun ScreenHome(
+    paddingValues: PaddingValues,
+    onCommentClick: (FeedPostModel) -> Unit
+) {
+    val viewModel: NewsFeedViewModel = viewModel()
+
+    val screenState = viewModel.screenState.collectAsState(NewsFeedScreenState.Initial)
+
+    val currentState = screenState.value
+
+    when (currentState) {
+        is NewsFeedScreenState.Posts -> {
+            FeedPosts(
+                posts = currentState.posts,
+                viewModel = viewModel,
+                paddingValues = paddingValues,
+                onCommentClick = onCommentClick
+            )
+        }
+
+        is NewsFeedScreenState.Initial -> {}
+    }
+}
+
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 @Composable
-fun ScreenHome(viewModel: MainViewModel, paddingValues: PaddingValues) {
-
-    val feedPostStateList = viewModel.feedPosts.collectAsState()
-
+private fun FeedPosts(
+    posts: List<FeedPostModel>,
+    viewModel: NewsFeedViewModel,
+    paddingValues: PaddingValues,
+    onCommentClick: (FeedPostModel) -> Unit
+) {
     LazyColumn(
         modifier = Modifier.padding(paddingValues),
         contentPadding = PaddingValues(
@@ -39,11 +70,11 @@ fun ScreenHome(viewModel: MainViewModel, paddingValues: PaddingValues) {
         ),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(feedPostStateList.value, key = { it.id }) { feedPostModel ->
+        items(posts, key = { it.id }) { feedPost ->
 
             val dismissState = rememberDismissState()
             if (dismissState.isDismissed(DismissDirection.EndToStart)) {
-                viewModel.deletePost(feedPostModel)
+                viewModel.deletePost(feedPost)
             }
             SwipeToDismiss(
                 modifier = Modifier.animateItemPlacement(),
@@ -70,19 +101,19 @@ fun ScreenHome(viewModel: MainViewModel, paddingValues: PaddingValues) {
                 },
                 dismissContent = {
                     PostCard(
-                        feedPostModel = feedPostModel,
+                        feedPostModel = feedPost,
                         onLikeClick = { statisticItem ->
 
-                            viewModel.updateCount(feedPostModel, statisticItem)
+                            viewModel.updateCount(feedPost, statisticItem)
                         },
-                        onCommentClick = { statisticItem ->
-                            viewModel.updateCount(feedPostModel, statisticItem)
+                        onCommentClick = {
+                            onCommentClick(feedPost)
                         },
                         onShareClick = { statisticItem ->
-                            viewModel.updateCount(feedPostModel, statisticItem)
+                            viewModel.updateCount(feedPost, statisticItem)
                         },
                         onViewClick = { statisticItem ->
-                            viewModel.updateCount(feedPostModel, statisticItem)
+                            viewModel.updateCount(feedPost, statisticItem)
                         }
                     )
                 }
