@@ -1,4 +1,4 @@
-package com.sumin.vknewsclient.domain
+package com.sumin.vknewsclient.domain.model
 
 import com.sumin.vknewsclient.R
 

@@ -1,4 +1,4 @@
-package com.sumin.vknewsclient.ui.theme
+package com.sumin.vknewsclient.presentation.ui.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Shapes
