@@ -1,5 +1,6 @@
 package com.sumin.vknewsclient.utils
 
+import android.annotation.SuppressLint
 import android.net.Uri
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -15,6 +16,18 @@ fun mapTimestampToDate(timestamp: Long): String {
 
 fun String.encode(): String {
     return Uri.encode(this)
+}
+
+
+@SuppressLint("DefaultLocale")
+fun formatStatisticCount(count: Int): String {
+    return if (count > 100_000) {
+        String.format("%sK", (count / 1000))
+    } else if (count > 1000) {
+        String.format("%.1fK", (count / 1000f))
+    } else {
+        count.toString()
+    }
 }
 
 
