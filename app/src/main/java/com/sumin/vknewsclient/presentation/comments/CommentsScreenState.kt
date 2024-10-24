@@ -1,12 +1,8 @@
 package com.sumin.vknewsclient.presentation.comments
 
-import com.sumin.vknewsclient.domain.post.FeedPostModel
-import com.sumin.vknewsclient.domain.comment.PostComment
+import com.sumin.vknewsclient.domain.model.comment.PostComment
 
-sealed class CommentsScreenState {
-    data object Initial : CommentsScreenState()
-    data class Comments(
-        val post: FeedPostModel,
-        val comments: List<PostComment>
-    ) : CommentsScreenState()
-}
+data class CommentsScreenState(
+    val comments: List<PostComment> = emptyList(),
+    val isLoading: Boolean = false
+)

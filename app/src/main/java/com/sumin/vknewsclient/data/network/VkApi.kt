@@ -13,13 +13,20 @@ interface VkApi {
         @Query("access_token") token: String
     ): NewsFeedResponseDto
 
-
     @GET("newsfeed.getRecommended?v=$VERSION")
     suspend fun loadNextNewsFeed(
         @Query("access_token") token: String,
         @Query("start_from") startFrom: String
     ): NewsFeedResponseDto
 
+    @GET("wall.getComments?v=$VERSION&extended=1&fields=photo_100")
+    suspend fun getComments(
+        @Query("access_token") token: String,
+        @Query("owner_id") ownerId: Long,
+        @Query("post_id") postId: Long,
+        @Query("offset") offset: Int,
+        @Query("count") count: Int,
+    ): CommentsResponseDto
 
     @GET("newsfeed.ignoreItem?v=$VERSION&type=wall")
     suspend fun ignoreItem(
@@ -28,7 +35,6 @@ interface VkApi {
         @Query("item_id") postId: Long
     )
 
-
     @GET("likes.add?v=$VERSION&type=post")
     suspend fun addLike(
         @Query("access_token") token: String,
@@ -36,21 +42,12 @@ interface VkApi {
         @Query("item_id") postId: Long
     ): LikesCountResponseDto
 
-
     @GET("likes.delete?v=$VERSION&type=post")
     suspend fun deleteLike(
         @Query("access_token") token: String,
         @Query("owner_id") ownerId: Long,
         @Query("item_id") postId: Long
     ): LikesCountResponseDto
-
-
-    @GET("wall.getComments?v=$VERSION&extended=1&fields=photo_100")
-    suspend fun getComments(
-        @Query("access_token") token: String,
-        @Query("owner_id") ownerId: Long,
-        @Query("post_id") postId: Long
-    ): CommentsResponseDto
 
 
     companion object {

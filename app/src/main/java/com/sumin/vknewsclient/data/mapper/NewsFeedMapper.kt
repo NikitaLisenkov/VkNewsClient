@@ -2,9 +2,10 @@ package com.sumin.vknewsclient.data.mapper
 
 import com.sumin.vknewsclient.data.network.model.CommentsResponseDto
 import com.sumin.vknewsclient.data.network.model.NewsFeedResponseDto
-import com.sumin.vknewsclient.domain.comment.PostComment
-import com.sumin.vknewsclient.domain.post.FeedPostModel
-import com.sumin.vknewsclient.domain.post.StatisticItem
+import com.sumin.vknewsclient.domain.model.comment.CommentsData
+import com.sumin.vknewsclient.domain.model.comment.PostComment
+import com.sumin.vknewsclient.domain.model.post.FeedPostModel
+import com.sumin.vknewsclient.domain.model.post.StatisticItem
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -41,7 +42,7 @@ class NewsFeedMapper {
     }
 
 
-    fun mapCommentsDtoToDomain(response: CommentsResponseDto): List<PostComment> {
+    fun mapCommentsDtoToDomain(response: CommentsResponseDto): CommentsData {
         val result = mutableListOf<PostComment>()
         val comments = response.content.comments
         val profiles = response.content.profiles
@@ -57,7 +58,10 @@ class NewsFeedMapper {
             )
             result.add(postComment)
         }
-        return result
+        return CommentsData(
+            comments = result,
+            totalCount = response.content.totalCount
+        )
     }
 
 

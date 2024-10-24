@@ -2,7 +2,7 @@ package com.sumin.vknewsclient.presentation.navigation
 
 import android.net.Uri
 import com.google.gson.Gson
-import com.sumin.vknewsclient.domain.post.FeedPostModel
+import com.sumin.vknewsclient.domain.model.post.FeedPostModel
 
 sealed class Screen(val route: String) {
 

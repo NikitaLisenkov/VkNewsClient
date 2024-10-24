@@ -27,7 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.sumin.vknewsclient.domain.post.FeedPostModel
+import com.sumin.vknewsclient.domain.model.post.FeedPostModel
 import com.sumin.vknewsclient.presentation.ui.theme.DarkBlue
 
 
@@ -43,6 +43,9 @@ fun NewsFeedScreen(
     val currentState = screenState.value
 
     when (currentState) {
+
+        is NewsFeedScreenState.Initial -> {}
+
         is NewsFeedScreenState.Posts -> {
             FeedPosts(
                 posts = currentState.posts,
@@ -52,8 +55,6 @@ fun NewsFeedScreen(
                 nextDataIsLoading = currentState.nextDataIsLoading
             )
         }
-
-        is NewsFeedScreenState.Initial -> {}
 
         is NewsFeedScreenState.Loading -> {
             Box(
