@@ -1,5 +1,6 @@
 package com.sumin.vknewsclient.presentation.news
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -32,7 +33,6 @@ import com.sumin.vknewsclient.domain.model.post.FeedPostModel
 import com.sumin.vknewsclient.domain.model.post.StatisticItem
 import com.sumin.vknewsclient.domain.model.post.StatisticItem.StatisticType
 import com.sumin.vknewsclient.presentation.ui.theme.DarkRed
-import com.sumin.vknewsclient.utils.formatStatisticCount
 
 @Composable
 fun PostCard(
@@ -149,6 +149,17 @@ private fun List<StatisticItem>.getItemByType(type: StatisticType): StatisticIte
     return this.find { item ->
         item.type == type
     } ?: throw IllegalStateException("Item not found")
+}
+
+@SuppressLint("DefaultLocale")
+private fun formatStatisticCount(count: Int): String {
+    return if (count > 100_000) {
+        String.format("%sK", (count / 1000))
+    } else if (count > 1000) {
+        String.format("%.1fK", (count / 1000f))
+    } else {
+        count.toString()
+    }
 }
 
 @Composable

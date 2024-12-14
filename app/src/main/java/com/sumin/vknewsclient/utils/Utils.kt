@@ -19,18 +19,6 @@ fun String.encode(): String {
 }
 
 
-@SuppressLint("DefaultLocale")
-fun formatStatisticCount(count: Int): String {
-    return if (count > 100_000) {
-        String.format("%sK", (count / 1000))
-    } else if (count > 1000) {
-        String.format("%.1fK", (count / 1000f))
-    } else {
-        count.toString()
-    }
-}
-
-
 suspend fun <T> runSuspendCatching(
     block: suspend () -> T,
     onSuccess: suspend (T) -> Unit = {},

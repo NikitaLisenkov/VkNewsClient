@@ -31,9 +31,7 @@ class NewsFeedRepositoryImpl @Inject constructor(
             if (startFrom == null) {
                 api.loadNewsFeed()
             } else {
-                api.loadNextNewsFeed(
-                    startFrom
-                )
+                api.loadNextNewsFeed(startFrom)
             }
         nextFrom = response.newsFeedContent.nextFrom
         val posts = mapper.mapNewsDtoToDomain(response)
